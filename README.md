@@ -19,8 +19,7 @@ Para **turistas e moradores locais** que **desejam explorar e conhecer melhor os
 -   📚 **Informações histórico-culturais** dos pontos de interesse
 -   ⏰ **Linha do tempo** com evolução histórica dos locais
 -   🗺️ **Mapa interativo** dos bairros
--   🍽️ **Informações sobre estabelecimentos** gastronômicos
--   📱 **Versão multiplataforma** para dispositivos móveis e totens pela cidade
+-   🍽️ **Informações sobre estabelecimentos**
 -   🏛️ **Integração oficial** com a prefeitura municipal
 
 ## Documentação
@@ -29,7 +28,6 @@ Para mais detalhes, consulte:
 
 -   [Visão do Produto](./docs/VISION.md)
 -   [Funcionalidades](./docs/FEATURES.md)
--   [Arquitetura](./docs/ARCHITECTURE.md)
 -   [Diagramas de Caso de Uso](./docs/diagrams/useCase.md)
 
 ## Equipe
