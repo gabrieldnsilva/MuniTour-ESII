@@ -21,6 +21,51 @@ Para **turistas e moradores locais** que **desejam explorar e conhecer melhor os
 -   🗺️ **Mapa interativo** dos bairros
 -   🍽️ **Informações sobre estabelecimentos**
 -   🏛️ **Integração oficial** com a prefeitura municipal
+-   📱 **Realidade Aumentada** para exploração imersiva
+-   📍 **Geolocalização** e busca baseada em localização
+-   🛣️ **Planejamento de rotas** personalizadas
+-   👤 **Perfil de usuário** com histórico e favoritos
+
+## Status do Desenvolvimento
+
+✅ **Protótipo Funcional Completo** - Todas as 9 funcionalidades principais (RF01-RF09) foram implementadas e testadas.
+
+### Funcionalidades Implementadas:
+
+-   ✅ RF01: Visualização 360°
+-   ✅ RF02: Consulta de Estabelecimentos
+-   ✅ RF03: Conteúdo Histórico
+-   ✅ RF04: Mapa Interativo (com Google Maps)
+-   ✅ RF05: Rotas Personalizadas
+-   ✅ RF06: Cadastro de Estabelecimentos
+-   ✅ RF07: Validação Municipal
+-   ✅ RF08: Realidade Aumentada
+-   ✅ RF09: Geolocalização
+
+## Como Executar o Protótipo
+
+1. **Obter chave da API do Google Maps**:
+
+    - Acesse [Google Cloud Console](https://console.cloud.google.com/)
+    - Ative a "Maps JavaScript API"
+    - Crie uma chave de API
+
+2. **Configurar o projeto**:
+    - Substitua `YOUR_API_KEY` no arquivo `src/MuniTourProt.html` pela sua chave real
+3. **Executar**:
+    - Abra `src/MuniTourProt.html` em um navegador web moderno
+    - A aplicação funcionará offline (exceto mapas que requerem internet)
+
+## Estrutura do Projeto
+
+```
+MuniTour/
+├── src/
+│   └── MuniTourProt.html    # Protótipo completo da aplicação
+├── docs/                    # Documentação do projeto
+├── README.md               # Este arquivo
+└── LICENSE                 # Licença do projeto
+```
 
 ## Documentação
 
@@ -32,9 +77,9 @@ Para mais detalhes, consulte:
 
 ## Equipe
 
--   **Gabriel Danilo do Nascimento e Silva** - _Desenvolvedor Full-Stack_
--   **Kaique** - _Desenvolvedor_
--   **Rogério** - _Desenvolvedor_
+-   **Gabriel Danilo**
+-   **Kaique Carvalho**
+-   **Rogério Rodrigues**
 
 ## Licença
 
