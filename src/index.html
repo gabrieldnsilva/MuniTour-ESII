@@ -1,0 +1,1296 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>MuniTour - Turismo Inteligente</title>
+
+		<!-- Tailwind CSS via CDN -->
+		<script src="https://cdn.tailwindcss.com"></script>
+
+		<!-- Google Fonts -->
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+			rel="stylesheet"
+		/>
+
+		<!-- Lucide Icons -->
+		<script src="https://unpkg.com/lucide@latest"></script>
+
+		<!-- Folha de Estilo Local -->
+		<link rel="stylesheet" href="./styles.css" />
+	</head>
+	<body class="bg-gray-100">
+		<div
+			id="app-container"
+			class="max-w-md mx-auto bg-white shadow-lg h-screen overflow-y-auto relative pb-20"
+		>
+			<!-- ======================================================= -->
+			<!-- TELA 1: PRINCIPAL / MAPA (RF04)                       -->
+			<!-- ======================================================= -->
+			<div id="screen-main">
+				<header
+					class="p-4 bg-white sticky top-0 z-10 border-b border-gray-200"
+				>
+					<h1 class="text-2xl font-bold text-gray-800">MuniTour</h1>
+					<p class="text-sm text-gray-500">
+						Explore a cidade como nunca antes.
+					</p>
+				</header>
+
+				<div class="p-4">
+					<!-- Mapa Interativo com Google Maps (RF04) -->
+					<div
+						id="map-container"
+						class="h-64 rounded-lg mb-4 overflow-hidden"
+					>
+						<div id="google-map" class="w-full h-full"></div>
+						<!-- Fallback para quando o Maps não carrega -->
+						<div
+							id="map-fallback"
+							class="bg-gray-200 h-64 rounded-lg flex items-center justify-center text-center text-gray-500 hidden"
+						>
+							<div class="text-center">
+								<i
+									data-lucide="map"
+									class="w-12 h-12 mx-auto text-gray-400"
+								></i>
+								<p class="mt-2 font-semibold">
+									Mapa Interativo da Cidade
+								</p>
+								<span class="text-xs">(RF04)</span>
+							</div>
+						</div>
+					</div>
+
+					<!-- Barra de Pesquisa com Geolocalização (RF09) -->
+					<div class="relative mb-4">
+						<input
+							type="text"
+							placeholder="Buscar por local ou categoria..."
+							class="w-full pl-10 pr-12 py-2 border rounded-full bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+							id="main-search-input"
+						/>
+						<i
+							data-lucide="search"
+							class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
+						></i>
+						<button
+							onclick="getCurrentLocation()"
+							class="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-blue-600 hover:bg-blue-50 rounded-full"
+							title="Usar minha localização"
+						>
+							<i data-lucide="map-pin" class="w-4 h-4"></i>
+						</button>
+					</div>
+
+					<!-- Categorias -->
+					<div class="grid grid-cols-3 gap-4 text-center mb-6">
+						<div
+							class="bg-blue-50 p-3 rounded-lg cursor-pointer hover:bg-blue-100 transition-colors"
+							onclick="showScreen('screen-tourist-point-list')"
+						>
+							<i
+								data-lucide="landmark"
+								class="w-8 h-8 mx-auto text-blue-600"
+							></i>
+							<span
+								class="text-xs font-medium text-blue-800 mt-1 block"
+								>Pontos Turísticos</span
+							>
+						</div>
+						<div
+							class="bg-green-50 p-3 rounded-lg cursor-pointer hover:bg-green-100 transition-colors"
+							onclick="showScreen('screen-establishments-list')"
+						>
+							<i
+								data-lucide="utensils-crossed"
+								class="w-8 h-8 mx-auto text-green-600"
+							></i>
+							<span
+								class="text-xs font-medium text-green-800 mt-1 block"
+								>Restaurantes</span
+							>
+						</div>
+						<div
+							class="bg-purple-50 p-3 rounded-lg cursor-pointer hover:bg-purple-100 transition-colors"
+							onclick="showScreen('screen-establishments-list')"
+						>
+							<i
+								data-lucide="shopping-bag"
+								class="w-8 h-8 mx-auto text-purple-600"
+							></i>
+							<span
+								class="text-xs font-medium text-purple-800 mt-1 block"
+								>Comércio</span
+							>
+						</div>
+					</div>
+
+					<!-- Seção "Perto de Você" -->
+					<div>
+						<h2 class="text-lg font-semibold text-gray-700 mb-3">
+							Perto de Você
+						</h2>
+						<div class="space-y-3" id="nearby-locations">
+							<!-- Conteúdo será carregado dinamicamente -->
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- ======================================================= -->
+			<!-- TELA 2: LISTA DE PONTOS TURÍSTICOS                   -->
+			<!-- ======================================================= -->
+			<div id="screen-tourist-point-list" class="hidden">
+				<header
+					class="p-4 bg-white sticky top-0 z-10 border-b border-gray-200 flex items-center"
+				>
+					<button
+						onclick="goBack()"
+						class="mr-3 p-2 rounded-full hover:bg-gray-100"
+					>
+						<i
+							data-lucide="arrow-left"
+							class="w-5 h-5 text-gray-600"
+						></i>
+					</button>
+					<h1 class="text-xl font-bold text-gray-800">
+						Pontos Turísticos
+					</h1>
+				</header>
+				<div class="p-4 space-y-3" id="tourist-points-container">
+					<!-- Lista de pontos turísticos será carregada dinamicamente -->
+				</div>
+			</div>
+
+			<!-- ======================================================= -->
+			<!-- TELA 3: DETALHE DO PONTO TURÍSTICO (RF01, RF03)       -->
+			<!-- ======================================================= -->
+			<div id="screen-tourist-point-detail" class="hidden">
+				<div>
+					<!-- Imagem de Capa -->
+					<div class="relative">
+						<img
+							id="detail-image"
+							src="https://placehold.co/600x400/d1d5db/374151?text=Ponto+Turístico"
+							alt="Ponto Turístico"
+							class="w-full h-56 object-cover"
+						/>
+						<button
+							onclick="goBack()"
+							class="absolute top-4 left-4 bg-white/80 p-2 rounded-full backdrop-blur-sm"
+						>
+							<i
+								data-lucide="arrow-left"
+								class="w-5 h-5 text-gray-800"
+							></i>
+						</button>
+					</div>
+
+					<div class="p-4">
+						<h1
+							id="detail-title"
+							class="text-2xl font-bold text-gray-800"
+						>
+							Nome do Ponto Turístico
+						</h1>
+						<p
+							id="detail-category"
+							class="text-md text-gray-600 mb-4"
+						>
+							Categoria
+						</p>
+
+						<!-- Botões de Ação Rápida -->
+						<div class="flex space-x-2 mb-6">
+							<button
+								class="flex-1 bg-blue-600 text-white py-3 rounded-lg font-semibold flex items-center justify-center space-x-2"
+								onclick="showScreen('screen-360-view')"
+							>
+								<i data-lucide="scan" class="w-5 h-5"></i>
+								<span>Ver em 360° (RF01)</span>
+							</button>
+							<button
+								class="flex-1 bg-gray-200 text-gray-800 py-3 rounded-lg font-semibold flex items-center justify-center space-x-2"
+								onclick="addToCurrentRoute()"
+							>
+								<i data-lucide="map-pin" class="w-5 h-5"></i>
+								<span>Adicionar à Rota</span>
+							</button>
+						</div>
+
+						<!-- Descrição -->
+						<div class="mb-6">
+							<p
+								id="detail-description"
+								class="text-gray-600 text-sm leading-relaxed"
+							>
+								Descrição detalhada do ponto turístico...
+							</p>
+						</div>
+
+						<!-- Informações Históricas -->
+						<div>
+							<h2
+								class="text-lg font-semibold text-gray-700 mb-2"
+							>
+								Informações Históricas (RF03)
+							</h2>
+
+							<h3
+								class="text-md font-semibold text-gray-700 mt-4 mb-2"
+							>
+								Linha do Tempo Interativa
+							</h3>
+							<div
+								id="timeline-container"
+								class="border-l-2 border-blue-500 pl-4 space-y-4 text-sm"
+							>
+								<!-- Timeline será carregada dinamicamente -->
+							</div>
+
+							<h3
+								class="text-md font-semibold text-gray-700 mt-6 mb-2"
+							>
+								Galeria de Fotos
+							</h3>
+							<div
+								id="photo-gallery"
+								class="grid grid-cols-3 gap-2"
+							>
+								<!-- Galeria será carregada dinamicamente -->
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- ======================================================= -->
+			<!-- TELA 4: VISUALIZAÇÃO 360° (RF01)                     -->
+			<!-- ======================================================= -->
+			<div
+				id="screen-360-view"
+				class="hidden absolute inset-0 bg-black z-50"
+			>
+				<img
+					id="image-360"
+					src="https://placehold.co/800x1200/333/555?text=Simulação+de+Imagem+360°"
+					class="w-full h-full object-cover transition-transform duration-300"
+					style="transform: scale(1) rotate(0deg)"
+				/>
+				<div class="absolute inset-0 bg-black/20"></div>
+
+				<!-- Header com informações -->
+				<div
+					class="absolute top-0 left-0 right-0 p-4 bg-gradient-to-b from-black/60 to-transparent"
+				>
+					<div class="flex items-center justify-between">
+						<button
+							onclick="goBack()"
+							class="bg-white/80 p-2 rounded-full backdrop-blur-sm"
+						>
+							<i
+								data-lucide="x"
+								class="w-6 h-6 text-gray-800"
+							></i>
+						</button>
+						<div class="flex items-center space-x-2">
+							<span
+								class="bg-white/80 px-3 py-1 rounded-full text-sm font-semibold text-gray-800 backdrop-blur-sm"
+							>
+								Alta Qualidade • 4K
+							</span>
+							<button
+								onclick="share360View()"
+								class="bg-white/80 p-2 rounded-full backdrop-blur-sm"
+							>
+								<i
+									data-lucide="share"
+									class="w-5 h-5 text-gray-800"
+								></i>
+							</button>
+						</div>
+					</div>
+				</div>
+
+				<!-- Controles de navegação 360° -->
+				<div
+					class="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center space-x-4 bg-white/90 p-3 rounded-full backdrop-blur-sm"
+				>
+					<button
+						onclick="zoom360('out')"
+						class="p-2 rounded-full hover:bg-gray-100"
+					>
+						<i
+							data-lucide="zoom-out"
+							class="w-6 h-6 text-gray-700"
+						></i>
+					</button>
+					<button
+						onclick="reset360View()"
+						class="p-2 rounded-full hover:bg-gray-100"
+					>
+						<i
+							data-lucide="move-3d"
+							class="w-8 h-8 text-gray-900"
+						></i>
+					</button>
+					<button
+						onclick="zoom360('in')"
+						class="p-2 rounded-full hover:bg-gray-100"
+					>
+						<i
+							data-lucide="zoom-in"
+							class="w-6 h-6 text-gray-700"
+						></i>
+					</button>
+					<div class="w-px h-6 bg-gray-300"></div>
+					<button
+						onclick="toggle360Fullscreen()"
+						class="p-2 rounded-full hover:bg-gray-100"
+					>
+						<i
+							data-lucide="maximize"
+							class="w-6 h-6 text-gray-700"
+						></i>
+					</button>
+				</div>
+
+				<!-- Instruções de uso -->
+				<div
+					class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center text-white pointer-events-none"
+				>
+					<h2 class="text-2xl font-bold mb-2">Interior da Igreja</h2>
+					<p class="text-lg mb-4">Use os controles para navegar</p>
+					<div
+						class="flex items-center justify-center space-x-4 text-sm opacity-75"
+					>
+						<div class="flex items-center">
+							<i data-lucide="mouse" class="w-4 h-4 mr-1"></i>
+							<span>Arraste para girar</span>
+						</div>
+						<div class="flex items-center">
+							<i data-lucide="scroll" class="w-4 h-4 mr-1"></i>
+							<span>Role para zoom</span>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- ======================================================= -->
+			<!-- TELA 5: LISTA DE ESTABELECIMENTOS (RF02)             -->
+			<!-- ======================================================= -->
+			<div id="screen-establishments-list" class="hidden">
+				<header
+					class="p-4 bg-white sticky top-0 z-10 border-b border-gray-200 flex items-center"
+				>
+					<button
+						onclick="goBack()"
+						class="mr-3 p-2 rounded-full hover:bg-gray-100"
+					>
+						<i
+							data-lucide="arrow-left"
+							class="w-5 h-5 text-gray-600"
+						></i>
+					</button>
+					<h1 class="text-xl font-bold text-gray-800">
+						Estabelecimentos
+					</h1>
+				</header>
+
+				<div class="p-4">
+					<!-- Filtros -->
+					<div class="flex space-x-2 overflow-x-auto pb-3 mb-4">
+						<button
+							class="filter-btn px-4 py-1 bg-blue-600 text-white rounded-full text-sm whitespace-nowrap"
+							onclick="filterEstablishments('all')"
+						>
+							Todos
+						</button>
+						<button
+							class="filter-btn px-4 py-1 bg-gray-200 text-gray-700 rounded-full text-sm whitespace-nowrap"
+							onclick="filterEstablishments('restaurant')"
+						>
+							Restaurantes
+						</button>
+						<button
+							class="filter-btn px-4 py-1 bg-gray-200 text-gray-700 rounded-full text-sm whitespace-nowrap"
+							onclick="filterEstablishments('shop')"
+						>
+							Lojas
+						</button>
+						<button
+							class="filter-btn px-4 py-1 bg-gray-200 text-gray-700 rounded-full text-sm whitespace-nowrap"
+							onclick="filterEstablishments('cafe')"
+						>
+							Cafés
+						</button>
+						<button
+							class="filter-btn px-4 py-1 bg-gray-200 text-gray-700 rounded-full text-sm whitespace-nowrap"
+							onclick="filterEstablishments('hotel')"
+						>
+							Hotéis
+						</button>
+					</div>
+
+					<!-- Filtros por Distância -->
+					<div class="mb-4">
+						<h3 class="text-sm font-semibold text-gray-700 mb-2">
+							Distância
+						</h3>
+						<div class="flex space-x-2 overflow-x-auto">
+							<button
+								class="distance-filter px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs whitespace-nowrap"
+								onclick="filterByDistance('all')"
+							>
+								Todas
+							</button>
+							<button
+								class="distance-filter px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs whitespace-nowrap"
+								onclick="filterByDistance(500)"
+							>
+								500m
+							</button>
+							<button
+								class="distance-filter px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs whitespace-nowrap"
+								onclick="filterByDistance(1000)"
+							>
+								1km
+							</button>
+							<button
+								class="distance-filter px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs whitespace-nowrap"
+								onclick="filterByDistance(2000)"
+							>
+								2km
+							</button>
+						</div>
+					</div>
+
+					<div class="space-y-3" id="establishments-container">
+						<!-- Os estabelecimentos serão renderizados dinamicamente aqui -->
+					</div>
+				</div>
+			</div>
+
+			<!-- ======================================================= -->
+			<!-- TELA 6: DETALHE DO ESTABELECIMENTO (RF02)            -->
+			<!-- ======================================================= -->
+			<div id="screen-establishment-detail" class="hidden">
+				<div>
+					<!-- Imagem de Capa -->
+					<div class="relative">
+						<img
+							id="establishment-image"
+							src="https://placehold.co/600x400/e0e7ff/4338ca?text=Restaurante"
+							alt="Estabelecimento"
+							class="w-full h-56 object-cover"
+						/>
+						<button
+							onclick="goBack()"
+							class="absolute top-4 left-4 bg-white/80 p-2 rounded-full backdrop-blur-sm"
+						>
+							<i
+								data-lucide="arrow-left"
+								class="w-5 h-5 text-gray-800"
+							></i>
+						</button>
+					</div>
+
+					<div class="p-4">
+						<span
+							class="inline-flex items-center bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full mb-2"
+						>
+							<i
+								data-lucide="check-circle"
+								class="w-3 h-3 mr-1.5"
+							></i>
+							Validado pela Prefeitura (RF07)
+						</span>
+						<h1
+							id="establishment-title"
+							class="text-2xl font-bold text-gray-800"
+						>
+							Nome do Estabelecimento
+						</h1>
+						<p
+							id="establishment-category"
+							class="text-md text-gray-600 mb-4"
+						>
+							Categoria do estabelecimento
+						</p>
+
+						<div
+							id="establishment-info"
+							class="space-y-3 text-gray-700 mb-6"
+						>
+							<!-- Informações serão carregadas dinamicamente -->
+						</div>
+
+						<div id="establishment-details">
+							<!-- Detalhes específicos serão carregados dinamicamente -->
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- ======================================================= -->
+			<!-- TELA 7: CRIAR ROTA PERSONALIZADA (RF05)              -->
+			<!-- ======================================================= -->
+			<div id="screen-route-planner" class="hidden">
+				<header
+					class="p-4 bg-white sticky top-0 z-10 border-b border-gray-200 flex items-center"
+				>
+					<button
+						onclick="goBack()"
+						class="mr-3 p-2 rounded-full hover:bg-gray-100"
+					>
+						<i
+							data-lucide="arrow-left"
+							class="w-5 h-5 text-gray-600"
+						></i>
+					</button>
+					<h1 class="text-xl font-bold text-gray-800">Minha Rota</h1>
+				</header>
+
+				<div class="p-4">
+					<div
+						class="bg-gray-200 h-48 rounded-lg flex items-center justify-center text-center text-gray-500 mb-4"
+					>
+						<div class="text-center">
+							<i
+								data-lucide="route"
+								class="w-10 h-10 mx-auto text-gray-400"
+							></i>
+							<p class="mt-2 font-semibold">Mapa da Rota</p>
+						</div>
+					</div>
+
+					<div
+						class="bg-blue-50 border-l-4 border-blue-500 text-blue-800 p-3 rounded-r-lg mb-4"
+					>
+						<p class="font-bold">
+							Distância Total:
+							<span id="total-distance">3.2 km</span>
+						</p>
+						<p>
+							Tempo Estimado (a pé):
+							<span id="total-time">45 min</span>
+						</p>
+					</div>
+
+					<div class="space-y-4" id="route-stops">
+						<!-- Paradas da rota serão carregadas dinamicamente -->
+					</div>
+
+					<button
+						onclick="showScreen('screen-add-stop')"
+						class="mt-6 w-full bg-blue-600 text-white font-semibold py-3 rounded-lg flex items-center justify-center space-x-2 hover:bg-blue-700 transition-colors"
+					>
+						<i data-lucide="plus" class="w-5 h-5"></i>
+						<span>Adicionar Parada</span>
+					</button>
+
+					<button
+						onclick="startRoute()"
+						class="mt-3 w-full bg-green-600 text-white font-semibold py-3 rounded-lg flex items-center justify-center space-x-2 hover:bg-green-700 transition-colors"
+					>
+						<i data-lucide="navigation" class="w-5 h-5"></i>
+						<span>Iniciar Rota</span>
+					</button>
+				</div>
+			</div>
+
+			<!-- ======================================================= -->
+			<!-- TELA 8: ADICIONAR PARADA À ROTA (RF05)               -->
+			<!-- ======================================================= -->
+			<div id="screen-add-stop" class="hidden">
+				<header
+					class="p-4 bg-white sticky top-0 z-10 border-b border-gray-200 flex items-center"
+				>
+					<button
+						onclick="goBack()"
+						class="mr-3 p-2 rounded-full hover:bg-gray-100"
+					>
+						<i
+							data-lucide="arrow-left"
+							class="w-5 h-5 text-gray-600"
+						></i>
+					</button>
+					<h1 class="text-xl font-bold text-gray-800">
+						Adicionar Parada
+					</h1>
+				</header>
+
+				<div class="p-4">
+					<!-- Barra de Busca -->
+					<div class="relative mb-4">
+						<input
+							type="text"
+							placeholder="Buscar local para adicionar..."
+							class="w-full pl-10 pr-4 py-3 border rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+							id="search-stop-input"
+						/>
+						<i
+							data-lucide="search"
+							class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
+						></i>
+					</div>
+
+					<!-- Categorias Rápidas -->
+					<div class="mb-6">
+						<h3 class="text-lg font-semibold text-gray-700 mb-3">
+							Categorias
+						</h3>
+						<div class="grid grid-cols-2 gap-3">
+							<button
+								class="category-filter-btn flex items-center p-3 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors"
+								onclick="filterAddStops('tourist')"
+							>
+								<i
+									data-lucide="landmark"
+									class="w-6 h-6 text-blue-600 mr-3"
+								></i>
+								<span class="font-medium text-blue-800"
+									>Pontos Turísticos</span
+								>
+							</button>
+							<button
+								class="category-filter-btn flex items-center p-3 bg-green-50 rounded-lg hover:bg-green-100 transition-colors"
+								onclick="filterAddStops('restaurant')"
+							>
+								<i
+									data-lucide="utensils-crossed"
+									class="w-6 h-6 text-green-600 mr-3"
+								></i>
+								<span class="font-medium text-green-800"
+									>Restaurantes</span
+								>
+							</button>
+							<button
+								class="category-filter-btn flex items-center p-3 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors"
+								onclick="filterAddStops('shop')"
+							>
+								<i
+									data-lucide="shopping-bag"
+									class="w-6 h-6 text-purple-600 mr-3"
+								></i>
+								<span class="font-medium text-purple-800"
+									>Comércio</span
+								>
+							</button>
+							<button
+								class="category-filter-btn flex items-center p-3 bg-yellow-50 rounded-lg hover:bg-yellow-100 transition-colors"
+								onclick="filterAddStops('cafe')"
+							>
+								<i
+									data-lucide="coffee"
+									class="w-6 h-6 text-yellow-600 mr-3"
+								></i>
+								<span class="font-medium text-yellow-800"
+									>Cafés</span
+								>
+							</button>
+						</div>
+					</div>
+
+					<!-- Lista de Locais Disponíveis -->
+					<div>
+						<h3 class="text-lg font-semibold text-gray-700 mb-3">
+							Locais Próximos
+						</h3>
+						<div class="space-y-3" id="available-stops">
+							<!-- Locais disponíveis serão carregados dinamicamente -->
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- ======================================================= -->
+			<!-- TELA 9: CADASTRO DE ESTABELECIMENTO (RF06)           -->
+			<!-- ======================================================= -->
+			<div id="screen-register-establishment" class="hidden">
+				<header
+					class="p-4 bg-white sticky top-0 z-10 border-b border-gray-200 flex items-center"
+				>
+					<button
+						onclick="goBack()"
+						class="mr-3 p-2 rounded-full hover:bg-gray-100"
+					>
+						<i
+							data-lucide="arrow-left"
+							class="w-5 h-5 text-gray-600"
+						></i>
+					</button>
+					<h1 class="text-xl font-bold text-gray-800">
+						Cadastrar Estabelecimento
+					</h1>
+				</header>
+
+				<div class="p-4 space-y-4">
+					<div
+						class="bg-blue-50 border-l-4 border-blue-500 p-3 rounded-r-lg"
+					>
+						<p class="text-blue-800 text-sm">
+							<i
+								data-lucide="info"
+								class="w-4 h-4 inline mr-1"
+							></i>
+							Após o cadastro, sua solicitação será analisada pela
+							prefeitura municipal.
+						</p>
+					</div>
+
+					<form id="establishment-form" class="space-y-4">
+						<div>
+							<label
+								class="block text-sm font-semibold text-gray-700 mb-2"
+								>Nome do Estabelecimento</label
+							>
+							<input
+								type="text"
+								name="name"
+								placeholder="Ex: Restaurante da Maria"
+								class="form-input w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+								required
+							/>
+						</div>
+
+						<div>
+							<label
+								class="block text-sm font-semibold text-gray-700 mb-2"
+								>Tipo de Estabelecimento</label
+							>
+							<select
+								name="type"
+								class="form-input w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+								required
+							>
+								<option value="">Selecione o tipo</option>
+								<option value="restaurant">Restaurante</option>
+								<option value="cafe">Cafeteria</option>
+								<option value="shop">Loja</option>
+								<option value="hotel">Hotel/Pousada</option>
+								<option value="service">Serviço</option>
+								<option value="other">Outro</option>
+							</select>
+						</div>
+
+						<div>
+							<label
+								class="block text-sm font-semibold text-gray-700 mb-2"
+								>Endereço Completo</label
+							>
+							<textarea
+								name="address"
+								placeholder="Rua, número, bairro, cidade"
+								class="form-input w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 h-20"
+								required
+							></textarea>
+						</div>
+
+						<div class="grid grid-cols-2 gap-4">
+							<div>
+								<label
+									class="block text-sm font-semibold text-gray-700 mb-2"
+									>Telefone</label
+								>
+								<input
+									type="tel"
+									name="phone"
+									placeholder="(19) 99999-9999"
+									class="form-input w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+									required
+								/>
+							</div>
+							<div>
+								<label
+									class="block text-sm font-semibold text-gray-700 mb-2"
+									>WhatsApp</label
+								>
+								<input
+									type="tel"
+									name="whatsapp"
+									placeholder="(19) 99999-9999"
+									class="form-input w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+								/>
+							</div>
+						</div>
+
+						<div>
+							<label
+								class="block text-sm font-semibold text-gray-700 mb-2"
+								>Horário de Funcionamento</label
+							>
+							<div class="grid grid-cols-2 gap-4">
+								<input
+									type="time"
+									name="opening"
+									placeholder="Abertura"
+									class="form-input w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+								/>
+								<input
+									type="time"
+									name="closing"
+									placeholder="Fechamento"
+									class="form-input w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+								/>
+							</div>
+						</div>
+
+						<div>
+							<label
+								class="block text-sm font-semibold text-gray-700 mb-2"
+								>Descrição</label
+							>
+							<textarea
+								name="description"
+								placeholder="Descreva seu estabelecimento, especialidades, diferenciais..."
+								class="form-input w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 h-24"
+							></textarea>
+						</div>
+
+						<div>
+							<label
+								class="block text-sm font-semibold text-gray-700 mb-2"
+								>Foto Principal</label
+							>
+							<div
+								class="upload-area border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors cursor-pointer"
+								onclick="document.getElementById('photo-input').click()"
+							>
+								<i
+									data-lucide="upload"
+									class="w-8 h-8 mx-auto text-gray-400 mb-2"
+								></i>
+								<p class="text-gray-500 text-sm">
+									Clique para fazer upload da foto
+								</p>
+								<p class="text-gray-400 text-xs mt-1">
+									PNG, JPG até 5MB
+								</p>
+							</div>
+							<input
+								type="file"
+								id="photo-input"
+								accept="image/*"
+								class="hidden"
+							/>
+						</div>
+
+						<!-- Preview da foto -->
+						<div id="photo-preview" class="hidden">
+							<img
+								id="preview-image"
+								class="w-32 h-32 object-cover rounded-lg border"
+								alt="Preview"
+							/>
+						</div>
+
+						<button
+							type="submit"
+							class="w-full bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 transition-colors"
+						>
+							Enviar Solicitação de Cadastro
+						</button>
+					</form>
+				</div>
+			</div>
+
+			<!-- ======================================================= -->
+			<!-- TELA 10: REALIDADE AUMENTADA (RF08)                  -->
+			<!-- ======================================================= -->
+			<div
+				id="screen-ar-view"
+				class="hidden absolute inset-0 bg-black z-50"
+			>
+				<div
+					id="ar-camera-feed"
+					class="w-full h-full relative ar-camera-simulation"
+				>
+					<!-- Simulação da câmera - em implementação real usaria WebRTC -->
+
+					<!-- Overlay de informações AR -->
+					<div id="ar-overlays" class="absolute inset-0">
+						<!-- Marcadores AR serão adicionados dinamicamente -->
+					</div>
+				</div>
+
+				<!-- Controles AR -->
+				<div
+					class="absolute top-4 left-4 right-4 flex justify-between items-center"
+				>
+					<button
+						onclick="goBack()"
+						class="bg-white/80 p-3 rounded-full backdrop-blur-sm"
+					>
+						<i data-lucide="x" class="w-6 h-6 text-gray-800"></i>
+					</button>
+
+					<div class="flex items-center space-x-2">
+						<button
+							onclick="toggleARFilters()"
+							class="bg-white/80 px-4 py-2 rounded-full backdrop-blur-sm flex items-center space-x-2"
+						>
+							<i
+								data-lucide="filter"
+								class="w-5 h-5 text-gray-800"
+							></i>
+							<span class="text-gray-800 font-medium text-sm"
+								>Filtros</span
+							>
+						</button>
+						<button
+							onclick="captureARScene()"
+							class="bg-white/80 p-3 rounded-full backdrop-blur-sm"
+						>
+							<i
+								data-lucide="camera"
+								class="w-6 h-6 text-gray-800"
+							></i>
+						</button>
+					</div>
+				</div>
+
+				<!-- Painel de filtros AR -->
+				<div
+					id="ar-filters-panel"
+					class="absolute bottom-4 left-4 right-4 bg-white/90 backdrop-blur-sm rounded-lg p-4 hidden"
+				>
+					<h3 class="font-bold text-gray-800 mb-3">Filtros AR</h3>
+					<div class="grid grid-cols-3 gap-2 text-sm">
+						<button
+							class="ar-filter-btn bg-blue-100 text-blue-800 px-3 py-2 rounded-lg"
+							onclick="setARFilter('all')"
+						>
+							<i
+								data-lucide="globe"
+								class="w-4 h-4 mx-auto mb-1"
+							></i>
+							<div>Todos</div>
+						</button>
+						<button
+							class="ar-filter-btn bg-blue-100 text-blue-800 px-3 py-2 rounded-lg"
+							onclick="setARFilter('tourist')"
+						>
+							<i
+								data-lucide="landmark"
+								class="w-4 h-4 mx-auto mb-1"
+							></i>
+							<div>Turístico</div>
+						</button>
+						<button
+							class="ar-filter-btn bg-green-100 text-green-800 px-3 py-2 rounded-lg"
+							onclick="setARFilter('restaurant')"
+						>
+							<i
+								data-lucide="utensils-crossed"
+								class="w-4 h-4 mx-auto mb-1"
+							></i>
+							<div>Comida</div>
+						</button>
+						<button
+							class="ar-filter-btn bg-purple-100 text-purple-800 px-3 py-2 rounded-lg"
+							onclick="setARFilter('shop')"
+						>
+							<i
+								data-lucide="shopping-bag"
+								class="w-4 h-4 mx-auto mb-1"
+							></i>
+							<div>Lojas</div>
+						</button>
+						<button
+							class="ar-filter-btn bg-yellow-100 text-yellow-800 px-3 py-2 rounded-lg"
+							onclick="setARFilter('cafe')"
+						>
+							<i
+								data-lucide="coffee"
+								class="w-4 h-4 mx-auto mb-1"
+							></i>
+							<div>Cafés</div>
+						</button>
+						<button
+							class="ar-filter-btn bg-red-100 text-red-800 px-3 py-2 rounded-lg"
+							onclick="setARFilter('hotel')"
+						>
+							<i
+								data-lucide="bed"
+								class="w-4 h-4 mx-auto mb-1"
+							></i>
+							<div>Hotéis</div>
+						</button>
+					</div>
+				</div>
+
+				<!-- Instruções AR -->
+				<div
+					class="absolute bottom-20 left-1/2 transform -translate-x-1/2 text-center text-white"
+				>
+					<div
+						class="bg-black/50 backdrop-blur-sm rounded-lg px-4 py-2"
+					>
+						<p class="text-sm font-medium">
+							Aponte a câmera para pontos de interesse
+						</p>
+						<p class="text-xs opacity-75">
+							Toque nos marcadores para mais informações
+						</p>
+					</div>
+				</div>
+			</div>
+
+			<!-- ======================================================= -->
+			<!-- TELA 11: PERFIL DO USUÁRIO                           -->
+			<!-- ======================================================= -->
+			<div id="screen-user-profile" class="hidden">
+				<header
+					class="p-4 bg-white sticky top-0 z-10 border-b border-gray-200 flex items-center"
+				>
+					<button
+						onclick="goBack()"
+						class="mr-3 p-2 rounded-full hover:bg-gray-100"
+					>
+						<i
+							data-lucide="arrow-left"
+							class="w-5 h-5 text-gray-600"
+						></i>
+					</button>
+					<h1 class="text-xl font-bold text-gray-800">Meu Perfil</h1>
+				</header>
+
+				<div class="p-4 space-y-6">
+					<!-- Informações do Usuário -->
+					<div class="text-center">
+						<div
+							class="w-24 h-24 bg-blue-100 rounded-full mx-auto mb-4 flex items-center justify-center"
+						>
+							<i
+								data-lucide="user"
+								class="w-12 h-12 text-blue-600"
+							></i>
+						</div>
+						<h2 class="text-xl font-bold text-gray-800">
+							Usuário Visitante
+						</h2>
+						<p class="text-gray-600">
+							Explore a cidade com o MuniTour
+						</p>
+					</div>
+
+					<!-- Estatísticas -->
+					<div
+						id="user-stats"
+						class="grid grid-cols-3 gap-4 text-center"
+					>
+						<!-- Estatísticas serão carregadas dinamicamente -->
+					</div>
+
+					<!-- Menu de Opções -->
+					<div class="space-y-2">
+						<button
+							onclick="showFavorites()"
+							class="w-full flex items-center p-4 bg-white rounded-lg border border-gray-200 hover:bg-gray-50"
+						>
+							<i
+								data-lucide="bookmark"
+								class="w-5 h-5 text-gray-600 mr-3"
+							></i>
+							<span
+								class="flex-1 text-left font-medium text-gray-800"
+								>Locais Favoritos</span
+							>
+							<i
+								data-lucide="chevron-right"
+								class="w-5 h-5 text-gray-400"
+							></i>
+						</button>
+						<button
+							onclick="showUserRoutes()"
+							class="w-full flex items-center p-4 bg-white rounded-lg border border-gray-200 hover:bg-gray-50"
+						>
+							<i
+								data-lucide="route"
+								class="w-5 h-5 text-gray-600 mr-3"
+							></i>
+							<span
+								class="flex-1 text-left font-medium text-gray-800"
+								>Minhas Rotas</span
+							>
+							<i
+								data-lucide="chevron-right"
+								class="w-5 h-5 text-gray-400"
+							></i>
+						</button>
+						<button
+							onclick="showCapturedPhotos()"
+							class="w-full flex items-center p-4 bg-white rounded-lg border border-gray-200 hover:bg-gray-50"
+						>
+							<i
+								data-lucide="camera"
+								class="w-5 h-5 text-gray-600 mr-3"
+							></i>
+							<span
+								class="flex-1 text-left font-medium text-gray-800"
+								>Fotos Capturadas</span
+							>
+							<i
+								data-lucide="chevron-right"
+								class="w-5 h-5 text-gray-400"
+							></i>
+						</button>
+						<button
+							onclick="showSettings()"
+							class="w-full flex items-center p-4 bg-white rounded-lg border border-gray-200 hover:bg-gray-50"
+						>
+							<i
+								data-lucide="settings"
+								class="w-5 h-5 text-gray-600 mr-3"
+							></i>
+							<span
+								class="flex-1 text-left font-medium text-gray-800"
+								>Configurações</span
+							>
+							<i
+								data-lucide="chevron-right"
+								class="w-5 h-5 text-gray-400"
+							></i>
+						</button>
+						<button
+							onclick="showHelp()"
+							class="w-full flex items-center p-4 bg-white rounded-lg border border-gray-200 hover:bg-gray-50"
+						>
+							<i
+								data-lucide="help-circle"
+								class="w-5 h-5 text-gray-600 mr-3"
+							></i>
+							<span
+								class="flex-1 text-left font-medium text-gray-800"
+								>Ajuda</span
+							>
+							<i
+								data-lucide="chevron-right"
+								class="w-5 h-5 text-gray-400"
+							></i>
+						</button>
+					</div>
+
+					<!-- Configurações Rápidas -->
+					<div class="bg-gray-50 p-4 rounded-lg">
+						<h3 class="font-bold text-gray-800 mb-3">
+							Configurações
+						</h3>
+						<div class="space-y-3">
+							<div class="flex items-center justify-between">
+								<span class="text-gray-700">Notificações</span>
+								<label
+									class="relative inline-flex items-center cursor-pointer"
+								>
+									<input
+										type="checkbox"
+										class="sr-only peer"
+										checked
+										onchange="toggleNotifications(this)"
+									/>
+									<div
+										class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"
+									></div>
+								</label>
+							</div>
+							<div class="flex items-center justify-between">
+								<span class="text-gray-700">Modo Escuro</span>
+								<label
+									class="relative inline-flex items-center cursor-pointer"
+								>
+									<input
+										type="checkbox"
+										class="sr-only peer"
+										onchange="toggleDarkMode(this)"
+									/>
+									<div
+										class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"
+									></div>
+								</label>
+							</div>
+							<div class="flex items-center justify-between">
+								<span class="text-gray-700">Localização</span>
+								<label
+									class="relative inline-flex items-center cursor-pointer"
+								>
+									<input
+										type="checkbox"
+										class="sr-only peer"
+										checked
+										onchange="toggleLocation(this)"
+									/>
+									<div
+										class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"
+									></div>
+								</label>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- ======================================================= -->
+			<!-- BARRA DE NAVEGAÇÃO INFERIOR                          -->
+			<!-- ======================================================= -->
+			<nav
+				class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md bg-white border-t border-gray-200 flex justify-around py-2"
+			>
+				<button
+					id="nav-home"
+					onclick="showScreen('screen-main')"
+					class="nav-button flex flex-col items-center text-blue-600 w-1/5"
+				>
+					<i data-lucide="home" class="w-6 h-6"></i>
+					<span class="text-xs">Início</span>
+				</button>
+				<button
+					id="nav-route"
+					onclick="showScreen('screen-route-planner')"
+					class="nav-button flex flex-col items-center text-gray-500 w-1/5"
+				>
+					<i data-lucide="route" class="w-6 h-6"></i>
+					<span class="text-xs">Rota</span>
+				</button>
+				<button
+					id="nav-ar"
+					onclick="showScreen('screen-ar-view')"
+					class="nav-button flex flex-col items-center text-gray-500 w-1/5"
+				>
+					<i data-lucide="camera" class="w-6 h-6"></i>
+					<span class="text-xs">AR</span>
+				</button>
+				<button
+					id="nav-register"
+					onclick="showScreen('screen-register-establishment')"
+					class="nav-button flex flex-col items-center text-gray-500 w-1/5"
+				>
+					<i data-lucide="plus-circle" class="w-6 h-6"></i>
+					<span class="text-xs">Cadastrar</span>
+				</button>
+				<button
+					id="nav-profile"
+					onclick="showScreen('screen-user-profile')"
+					class="nav-button flex flex-col items-center text-gray-500 w-1/5"
+				>
+					<i data-lucide="user" class="w-6 h-6"></i>
+					<span class="text-xs">Perfil</span>
+				</button>
+			</nav>
+		</div>
+
+		<!-- Google Maps API -->
+		<script
+			src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDhXn9mcpcHkGJG_UVuSZGDRobDmscdzAk&callback=initMap&libraries=places"
+			async
+			defer
+		></script>
+
+		<!-- Script Local -->
+		<script src="./script.js"></script>
+	</body>
+</html>
