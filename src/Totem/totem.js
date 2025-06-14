@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
         {
             name: "Museu Histórico e Pedagógico",
             category: "Cultura e História",
-            image: "https://www.mogimirim.sp.gov.br/storage/image/2022-08/16-08-22-b-museu.jpg"
+            image: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1c/fd/05/e4/igreja-matriz-de-sao.jpg?w=1200&h=-1&s=1"
         },
         {
             name: "Restaurante Sabor da Terra",
@@ -22,12 +22,12 @@ document.addEventListener('DOMContentLoaded', () => {
         {
             name: "Loja de Artesanato Local",
             category: "Artesanato",
-            image: "https://images.unsplash.com/photo-1506800742593-c3b418a1a3a6?q=80&w=1974&auto=format&fit=crop"
+            image: "https://www.guiaviagensbrasil.com/imagens/fachada-loja-embu-das-artes-sp.jpg"
         },
          {
             name: "Praça Rui Barbosa",
             category: "Lazer e Natureza",
-            image: "https://lh5.googleusercontent.com/p/AF1QipM5Qc8u_Xy1x9xY-2I1T3J0G6P2H8t6I5O7V7Cg=w540-h312-n-k-no"
+            image: "https://vault.pulsarimagens.com.br/file/preview/22MS265.jpg"
         }
     ];
 
