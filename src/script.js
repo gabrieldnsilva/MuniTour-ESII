@@ -436,12 +436,35 @@ const MOCK_DATA = {
 // INICIALIZAÇÃO E VARIÁVEIS GLOBAIS
 // =======================================================
 document.addEventListener("DOMContentLoaded", () => {
-	lucide.createIcons();
-	initializeApp();
-	setupEventListeners();
-	loadNearbyLocations();
-	loadUserStats();
+    // Localiza a tela de splash
+    const splashScreen = document.getElementById('splash-screen');
+    
+    // Renderiza o ícone do splash screen imediatamente
+    lucide.createIcons();
+
+    // Define o tempo que a tela de splash ficará visível (ex: 3000ms = 3 segundos)
+    setTimeout(() => {
+        if (splashScreen) {
+            splashScreen.classList.add('opacity-0');
+
+            // Adiciona um listener que espera a transição CSS terminar
+            // antes de adicionar a classe 'hidden'. Isso é mais preciso.
+            splashScreen.addEventListener('transitionend', () => {
+                splashScreen.classList.add('hidden');
+            }, { once: true }); // O { once: true } garante que isso só aconteça uma vez.
+        }
+        
+        // Inicializa o restante do seu aplicativo
+        initializeApp();
+        setupEventListeners();
+        loadNearbyLocations();
+        loadUserStats();
+
+    }, 2000); // Tempo total que o splash fica na tela
+
+	
 });
+
 
 const screenHistory = ["screen-main"];
 let map;
@@ -562,7 +585,7 @@ function handleScreenSpecificLogic(screenId) {
 
 function updateNavigationState(screenId) {
 	document.querySelectorAll("nav button").forEach((btn) => {
-		btn.classList.remove("text-blue-600");
+		btn.classList.remove("text-[#F24E1E]");
 		btn.classList.add("text-gray-500");
 	});
 
@@ -579,7 +602,7 @@ function updateNavigationState(screenId) {
 		const navButton = document.getElementById(activeNav);
 		if (navButton) {
 			navButton.classList.remove("text-gray-500");
-			navButton.classList.add("text-blue-600");
+			navButton.classList.add("text-[#F24E1E]");
 		}
 	}
 }
@@ -677,7 +700,7 @@ function loadTouristPointsList() {
 				<div class="flex items-center mt-1 space-x-2">
 					${
 						point.has360
-							? '<span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">360°</span>'
+							? '<span class="text-xs bg-amber-100 text-amber-800 px-2 py-1 rounded-full">360°</span>'
 							: ""
 					}
 					${
@@ -724,7 +747,7 @@ function loadTimeline(timeline) {
 		const div = document.createElement("div");
 		div.className = "timeline-item mb-4";
 		div.innerHTML = `
-			<p class="font-bold text-blue-600 mb-1">${item.year} - ${item.title}</p>
+			<p class="font-bold text-[#F24E1E] mb-1">${item.year} - ${item.title}</p>
 			<p class="text-gray-500">${item.description}</p>
 		`;
 		container.appendChild(div);
@@ -915,12 +938,12 @@ function filterEstablishments(type) {
 	establishmentFilters.type = type;
 
 	document.querySelectorAll(".filter-btn").forEach((btn) => {
-		btn.classList.remove("bg-blue-600", "text-white");
+		btn.classList.remove("bg-[#F24E1E]", "text-white");
 		btn.classList.add("bg-gray-200", "text-gray-700");
 	});
 
 	event.currentTarget.classList.remove("bg-gray-200", "text-gray-700");
-	event.currentTarget.classList.add("bg-blue-600", "text-white");
+	event.currentTarget.classList.add("bg-[#F24E1E]", "text-white");
 
 	renderEstablishments();
 }
@@ -929,12 +952,12 @@ function filterByDistance(maxDistance) {
 	establishmentFilters.distance = maxDistance;
 
 	document.querySelectorAll(".distance-filter").forEach((btn) => {
-		btn.classList.remove("bg-blue-100", "text-blue-800");
+		btn.classList.remove("bg-amber-100", "text-amber-800");
 		btn.classList.add("bg-gray-100", "text-gray-700");
 	});
 
 	event.currentTarget.classList.remove("bg-gray-100", "text-gray-700");
-	event.currentTarget.classList.add("bg-blue-100", "text-blue-800");
+	event.currentTarget.classList.add("bg-amber-100", "text-amber-800");
 
 	renderEstablishments();
 }
@@ -965,7 +988,7 @@ function loadCurrentRoute() {
 		div.className = "route-stop flex items-center mb-4";
 		div.innerHTML = `
 			<div class="flex flex-col items-center mr-4">
-				<span class="bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm">
+				<span class="bg-[#F24E1E] text-white w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm">
 					${index + 1}
 				</span>
 				${
@@ -1053,7 +1076,7 @@ function loadAvailableStops() {
 			stop.distance || Math.floor(Math.random() * 1000) + 100
 		}m</p>
 			</div>
-			<button class="p-2 bg-blue-100 text-blue-600 rounded-full hover:bg-blue-200 transition-colors">
+			<button class="p-2 bg-amber-100 text-[#F24E1E] rounded-full hover:bg-blue-200 transition-colors">
 				<i data-lucide="plus" class="w-4 h-4"></i>
 			</button>
 		`;
@@ -1237,7 +1260,7 @@ function initializeAR() {
 				<div class="flex gap-2">
 					<button onclick="showARDetails('${
 						marker.id
-					}')" class="text-xs bg-blue-600 text-white px-3 py-1 rounded-full hover:bg-blue-700">
+					}')" class="text-xs bg-[#F24E1E] text-white px-3 py-1 rounded-full hover:bg-blue-700">
 						Detalhes
 					</button>
 					${
@@ -1272,7 +1295,7 @@ function getARIcon(type) {
 
 function getARIconColor(type) {
 	const colors = {
-		tourist: "text-blue-600",
+		tourist: "text-[#F24E1E]",
 		restaurant: "text-green-600",
 		shop: "text-purple-600",
 		cafe: "text-yellow-600",
@@ -1348,9 +1371,9 @@ function loadUserStats() {
 	);
 
 	statsContainer.innerHTML = `
-		<div class="stat-card bg-blue-50 p-4 rounded-lg cursor-pointer hover:bg-blue-100 transition-colors">
-			<div class="text-2xl font-bold text-blue-600">${stats.visitedPlaces}</div>
-			<div class="text-sm text-blue-800">Locais Visitados</div>
+		<div class="stat-card bg-amber-50 p-4 rounded-lg cursor-pointer hover:bg-amber-100 transition-colors">
+			<div class="text-2xl font-bold text-[#F24E1E]">${stats.visitedPlaces}</div>
+			<div class="text-sm text-amber-800">Locais Visitados</div>
 		</div>
 		<div class="stat-card bg-green-50 p-4 rounded-lg cursor-pointer hover:bg-green-100 transition-colors">
 			<div class="text-2xl font-bold text-green-600">${stats.createdRoutes}</div>
@@ -1589,7 +1612,7 @@ function addTouristPointMarkers() {
 				<div class="p-2">
 					<h3 class="font-bold">${point.name}</h3>
 					<p class="text-sm text-gray-600">${point.category}</p>
-					<button onclick="showTouristPointDetail(${point.id})" class="mt-2 bg-blue-600 text-white px-3 py-1 rounded text-sm">
+					<button onclick="showTouristPointDetail(${point.id})" class="mt-2 bg-[#F24E1E] text-white px-3 py-1 rounded text-sm">
 						Ver Detalhes
 					</button>
 				</div>
@@ -1635,7 +1658,7 @@ function showNotification(message, type = "info") {
 			? "bg-red-600"
 			: type === "warning"
 			? "bg-yellow-600"
-			: "bg-blue-600";
+			: "bg-[#F24E1E]";
 
 	notification.className = `notification fixed top-4 left-1/2 transform -translate-x-1/2 ${bgColor} text-white px-6 py-3 rounded-lg shadow-lg z-50 max-w-sm text-center text-sm font-medium`;
 	notification.textContent = message;
@@ -1659,3 +1682,4 @@ function showNotification(message, type = "info") {
 		}
 	}, 3000);
 }
+

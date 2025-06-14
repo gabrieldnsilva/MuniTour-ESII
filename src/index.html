@@ -23,6 +23,17 @@
 		<link rel="stylesheet" href="./styles.css" />
 	</head>
 	<body class="bg-gray-100">
+    <div
+        id="splash-screen"
+        class="fixed inset-0 z-[999] flex flex-col items-center justify-center bg-[#F24E1E] text-white transition-opacity duration-700 ease-in-out"
+    >
+        <div class="text-center">
+            <i data-lucide="map-pin" class="w-14 h-14 mx-auto"></i>
+            <h1 class="text-5xl font-bold tracking-wider mt-4">MUNITOUR</h1>
+            <p class="text-xs tracking-[0.2em] mt-2">EXPLORE THE WORLD</p>
+        </div>
+    </div>
+
 		<div
 			id="app-container"
 			class="max-w-md mx-auto bg-white shadow-lg h-screen overflow-y-auto relative pb-20"
@@ -50,7 +61,7 @@
 						<!-- Fallback para quando o Maps não carrega -->
 						<div
 							id="map-fallback"
-							class="bg-gray-200 h-64 rounded-lg flex items-center justify-center text-center text-gray-500 hidden"
+							class="bg-gray-600 h-64 rounded-lg flex items-center justify-center text-center text-gray-500 hidden"
 						>
 							<div class="text-center">
 								<i
@@ -79,7 +90,7 @@
 						></i>
 						<button
 							onclick="getCurrentLocation()"
-							class="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-blue-600 hover:bg-blue-50 rounded-full"
+							class="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-#F24E1E hover:bg-blue-50 rounded-full"
 							title="Usar minha localização"
 						>
 							<i data-lucide="map-pin" class="w-4 h-4"></i>
@@ -94,7 +105,7 @@
 						>
 							<i
 								data-lucide="landmark"
-								class="w-8 h-8 mx-auto text-blue-600"
+								class="w-8 h-8 mx-auto text-#F24E1E"
 							></i>
 							<span
 								class="text-xs font-medium text-blue-800 mt-1 block"
@@ -207,14 +218,14 @@
 						<!-- Botões de Ação Rápida -->
 						<div class="flex space-x-2 mb-6">
 							<button
-								class="flex-1 bg-blue-600 text-white py-3 rounded-lg font-semibold flex items-center justify-center space-x-2"
+								class="flex-1 bg-orange-600 text-white py-3 rounded-lg font-semibold flex items-center justify-center space-x-2"
 								onclick="showScreen('screen-360-view')"
 							>
 								<i data-lucide="scan" class="w-5 h-5"></i>
 								<span>Ver em 360° (RF01)</span>
 							</button>
 							<button
-								class="flex-1 bg-gray-200 text-gray-800 py-3 rounded-lg font-semibold flex items-center justify-center space-x-2"
+								class="flex-1 bg-gray-300 text-gray-800 py-3 rounded-lg font-semibold flex items-center justify-center space-x-2"
 								onclick="addToCurrentRoute()"
 							>
 								<i data-lucide="map-pin" class="w-5 h-5"></i>
@@ -247,7 +258,7 @@
 							</h3>
 							<div
 								id="timeline-container"
-								class="border-l-2 border-blue-500 pl-4 space-y-4 text-sm"
+								class="border-l-2 border-[#F24E1E] pl-4 space-y-4 text-sm"
 							>
 								<!-- Timeline será carregada dinamicamente -->
 							</div>
@@ -405,31 +416,31 @@
 					<!-- Filtros -->
 					<div class="flex space-x-2 overflow-x-auto pb-3 mb-4">
 						<button
-							class="filter-btn px-4 py-1 bg-blue-600 text-white rounded-full text-sm whitespace-nowrap"
+							class="filter-btn px-4 py-1 bg-#F24E1E text-white rounded-full text-sm whitespace-nowrap"
 							onclick="filterEstablishments('all')"
 						>
 							Todos
 						</button>
 						<button
-							class="filter-btn px-4 py-1 bg-gray-200 text-gray-700 rounded-full text-sm whitespace-nowrap"
+							class="filter-btn px-4 py-1 bg-gray-600 text-gray-700 rounded-full text-sm whitespace-nowrap"
 							onclick="filterEstablishments('restaurant')"
 						>
 							Restaurantes
 						</button>
 						<button
-							class="filter-btn px-4 py-1 bg-gray-200 text-gray-700 rounded-full text-sm whitespace-nowrap"
+							class="filter-btn px-4 py-1 bg-gray-600 text-gray-700 rounded-full text-sm whitespace-nowrap"
 							onclick="filterEstablishments('shop')"
 						>
 							Lojas
 						</button>
 						<button
-							class="filter-btn px-4 py-1 bg-gray-200 text-gray-700 rounded-full text-sm whitespace-nowrap"
+							class="filter-btn px-4 py-1 bg-gray-600 text-gray-700 rounded-full text-sm whitespace-nowrap"
 							onclick="filterEstablishments('cafe')"
 						>
 							Cafés
 						</button>
 						<button
-							class="filter-btn px-4 py-1 bg-gray-200 text-gray-700 rounded-full text-sm whitespace-nowrap"
+							class="filter-btn px-4 py-1 bg-gray-600 text-gray-700 rounded-full text-sm whitespace-nowrap"
 							onclick="filterEstablishments('hotel')"
 						>
 							Hotéis
@@ -557,7 +568,7 @@
 
 				<div class="p-4">
 					<div
-						class="bg-gray-200 h-48 rounded-lg flex items-center justify-center text-center text-gray-500 mb-4"
+						class="bg-gray-600 h-48 rounded-lg flex items-center justify-center text-center text-gray-500 mb-4"
 					>
 						<div class="text-center">
 							<i
@@ -569,7 +580,7 @@
 					</div>
 
 					<div
-						class="bg-blue-50 border-l-4 border-blue-500 text-blue-800 p-3 rounded-r-lg mb-4"
+						class="bg-blue-50 border-l-4 border-[#F24E1E] text-blue-800 p-3 rounded-r-lg mb-4"
 					>
 						<p class="font-bold">
 							Distância Total:
@@ -587,7 +598,7 @@
 
 					<button
 						onclick="showScreen('screen-add-stop')"
-						class="mt-6 w-full bg-blue-600 text-white font-semibold py-3 rounded-lg flex items-center justify-center space-x-2 hover:bg-blue-700 transition-colors"
+						class="mt-6 w-full bg-orange-600 text-white font-semibold py-3 rounded-lg flex items-center justify-center space-x-2 hover:bg-blue-700 transition-colors"
 					>
 						<i data-lucide="plus" class="w-5 h-5"></i>
 						<span>Adicionar Parada</span>
@@ -651,7 +662,7 @@
 							>
 								<i
 									data-lucide="landmark"
-									class="w-6 h-6 text-blue-600 mr-3"
+									class="w-6 h-6 text-#F24E1E mr-3"
 								></i>
 								<span class="font-medium text-blue-800"
 									>Pontos Turísticos</span
@@ -731,7 +742,7 @@
 
 				<div class="p-4 space-y-4">
 					<div
-						class="bg-blue-50 border-l-4 border-blue-500 p-3 rounded-r-lg"
+						class="bg-blue-50 border-l-4 border-[#F24E1E] p-3 rounded-r-lg"
 					>
 						<p class="text-blue-800 text-sm">
 							<i
@@ -891,7 +902,7 @@
 
 						<button
 							type="submit"
-							class="w-full bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 transition-colors"
+							class="w-full bg-orange-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 transition-colors"
 						>
 							Enviar Solicitação de Cadastro
 						</button>
@@ -1068,7 +1079,7 @@
 						>
 							<i
 								data-lucide="user"
-								class="w-12 h-12 text-blue-600"
+								class="w-12 h-12 text-#F24E1E"
 							></i>
 						</div>
 						<h2 class="text-xl font-bold text-gray-800">
@@ -1194,7 +1205,7 @@
 										onchange="toggleNotifications(this)"
 									/>
 									<div
-										class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"
+										class="w-11 h-6 bg-gray-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-#F24E1E"
 									></div>
 								</label>
 							</div>
@@ -1209,7 +1220,7 @@
 										onchange="toggleDarkMode(this)"
 									/>
 									<div
-										class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"
+										class="w-11 h-6 bg-gray-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-#F24E1E"
 									></div>
 								</label>
 							</div>
@@ -1225,7 +1236,7 @@
 										onchange="toggleLocation(this)"
 									/>
 									<div
-										class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"
+										class="w-11 h-6 bg-gray-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-#F24E1E"
 									></div>
 								</label>
 							</div>
@@ -1243,7 +1254,7 @@
 				<button
 					id="nav-home"
 					onclick="showScreen('screen-main')"
-					class="nav-button flex flex-col items-center text-blue-600 w-1/5"
+					class="nav-button flex flex-col items-center text-#F24E1E w-1/5"
 				>
 					<i data-lucide="home" class="w-6 h-6"></i>
 					<span class="text-xs">Início</span>
