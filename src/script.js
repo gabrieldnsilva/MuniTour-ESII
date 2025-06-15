@@ -1,6 +1,7 @@
 // =======================================================
 // MOCK DATA COMPLETO PARA PROTÓTIPO
 // =======================================================
+
 const MOCK_DATA = {
 	touristPoints: [
 		{
@@ -433,29 +434,9 @@ const MOCK_DATA = {
 };
 
 // =======================================================
-// INICIALIZAÇÃO E VARIÁVEIS GLOBAIS
-// =======================================================
-document.addEventListener("DOMContentLoaded", () => {
-	lucide.createIcons();
-	initializeApp();
-	setupEventListeners();
-	loadNearbyLocations();
-	loadUserStats();
-});
-
-const screenHistory = ["screen-main"];
-let map;
-let userLocation = null;
-let placesService;
-let markers = [];
-let currentTouristPoint = null;
-let currentEstablishment = null;
-let currentRoute = [];
-let establishmentFilters = { type: "all", distance: "all" };
-
-// =======================================================
 // INICIALIZAÇÃO DA APLICAÇÃO
 // =======================================================
+
 function initializeApp() {
 	localStorage.setItem(
 		"munitour_user_stats",
@@ -491,27 +472,55 @@ function setupEventListeners() {
 }
 
 // =======================================================
-// NAVEGAÇÃO E CONTROLE DE TELAS
+// NAVEGAÇÃO E LÓGICA PRINCIPAL
 // =======================================================
-function showScreen(screenId) {
-	document
-		.querySelectorAll('#app-container > div[id^="screen-"]')
-		.forEach((screen) => {
-			screen.classList.add("hidden");
-		});
+
+let screenHistory = ["screen-main"]; // Histórico de telas para navegação
+let map;
+let userLocation = null;
+let placesService;
+let markers = [];
+let currentTouristPoint = null;
+let currentEstablishment = null;
+let currentRoute = null;
+let establishmentFilters = {
+	type: "all", // 'all', 'restaurant', 'cafe', 'shop', 'hotel'
+	distance: "all", // 'all', 500, 1000, 2000 (em metros)
+};
+
+function showScreen(screenId, isGoingBack = false) {
+	const allScreens = document.querySelectorAll(
+		'#app-container > div[id^="screen-"], #bottom-nav'
+	);
+	allScreens.forEach((screen) => screen.classList.add("hidden"));
 
 	const targetScreen = document.getElementById(screenId);
 	if (targetScreen) {
 		targetScreen.classList.remove("hidden");
 	}
 
-	if (screenHistory[screenHistory.length - 1] !== screenId) {
-		screenHistory.push(screenId);
+	// Mostra a barra de navegação inferior se a tela não for de login/splash
+	if (!["screen-login", "screen-welcome-splash"].includes(screenId)) {
+		document.getElementById("bottom-nav").classList.remove("hidden");
+	}
+
+	if (!isGoingBack) {
+		if (screenHistory[screenHistory.length - 1] !== screenId) {
+			screenHistory.push(screenId);
+		}
 	}
 
 	document.getElementById("app-container").scrollTop = 0;
-	handleScreenSpecificLogic(screenId);
-	updateNavigationState(screenId);
+
+	// Lógica específica ao abrir telas
+	if (screenId === "screen-establishments-list") {
+		renderEstablishments();
+	}
+	if (screenId === "screen-tourist-point-list") {
+		renderTouristPoints();
+	}
+	// O mapa é inicializado pelo callback da API, não aqui diretamente.
+
 	lucide.createIcons();
 }
 
@@ -519,78 +528,43 @@ function goBack() {
 	if (screenHistory.length > 1) {
 		screenHistory.pop();
 		const previousScreenId = screenHistory[screenHistory.length - 1];
+		showScreen(previousScreenId, true);
+	}
+}
 
-		document
-			.querySelectorAll('#app-container > div[id^="screen-"]')
-			.forEach((screen) => {
-				screen.classList.add("hidden");
-			});
+function handleLogin() {
+	showScreen("screen-welcome-splash");
+}
 
-		const targetScreen = document.getElementById(previousScreenId);
-		if (targetScreen) {
-			targetScreen.classList.remove("hidden");
+function startApp() {
+	screenHistory = []; // Reseta o histórico para não voltar para o login
+	showScreen("screen-main");
+}
+
+function showNotification(message, type = "info") {
+	const notification = document.createElement("div");
+	const bgColor =
+		type === "success"
+			? "bg-green-600"
+			: type === "error"
+			? "bg-red-600"
+			: "bg-[#F24E1E]"; // Cor primária para notificações 'info'
+
+	notification.className = `fixed top-4 left-1/2 transform -translate-x-1/2 ${bgColor} text-white px-4 py-2 rounded-lg shadow-lg z-50`;
+	notification.textContent = message;
+	document.body.appendChild(notification);
+
+	setTimeout(() => {
+		if (document.body.contains(notification)) {
+			document.body.removeChild(notification);
 		}
-
-		document.getElementById("app-container").scrollTop = 0;
-		updateNavigationState(previousScreenId);
-		lucide.createIcons();
-	}
-}
-
-function handleScreenSpecificLogic(screenId) {
-	switch (screenId) {
-		case "screen-tourist-point-list":
-			loadTouristPointsList();
-			break;
-		case "screen-establishments-list":
-			renderEstablishments();
-			break;
-		case "screen-route-planner":
-			loadCurrentRoute();
-			break;
-		case "screen-add-stop":
-			loadAvailableStops();
-			break;
-		case "screen-ar-view":
-			initializeAR();
-			break;
-		case "screen-user-profile":
-			loadUserStats();
-			break;
-	}
-}
-
-function updateNavigationState(screenId) {
-	document.querySelectorAll("nav button").forEach((btn) => {
-		btn.classList.remove("text-blue-600");
-		btn.classList.add("text-gray-500");
-	});
-
-	const navMap = {
-		"screen-main": "nav-home",
-		"screen-route-planner": "nav-route",
-		"screen-ar-view": "nav-ar",
-		"screen-register-establishment": "nav-register",
-		"screen-user-profile": "nav-profile",
-	};
-
-	const activeNav = navMap[screenId];
-	if (activeNav) {
-		const navButton = document.getElementById(activeNav);
-		if (navButton) {
-			navButton.classList.remove("text-gray-500");
-			navButton.classList.add("text-blue-600");
-		}
-	}
-}
-
-function setupNavigationState() {
-	updateNavigationState("screen-main");
+	}, 3000);
 }
 
 // =======================================================
-// CARREGAMENTO DE CONTEÚDO DINÂMICO
+// 			CARREGAMENTO DE CONTEÚDO DINÂMICO
 // =======================================================
+
 function loadNearbyLocations() {
 	const container = document.getElementById("nearby-locations");
 	if (!container) return;
@@ -724,8 +698,8 @@ function loadTimeline(timeline) {
 		const div = document.createElement("div");
 		div.className = "timeline-item mb-4";
 		div.innerHTML = `
-			<p class="font-bold text-blue-600 mb-1">${item.year} - ${item.title}</p>
-			<p class="text-gray-500">${item.description}</p>
+			<p class="font-bold text-[#F24E1E]">${item.year} - ${item.event}</p>
+                <p class="text-gray-500">${item.description}</p>
 		`;
 		container.appendChild(div);
 	});
@@ -752,8 +726,9 @@ function openPhotoModal(photoUrl) {
 }
 
 // =======================================================
-// ESTABELECIMENTOS
+//  			RENDERIZAR ESTABELECIMENTOS
 // =======================================================
+
 function renderEstablishments() {
 	const container = document.getElementById("establishments-container");
 	if (!container) return;
@@ -911,37 +886,38 @@ function getDetailsTitle(type) {
 	return titles[type] || "Produtos e Serviços";
 }
 
-function filterEstablishments(type) {
+function filterEstablishments(type, element) {
 	establishmentFilters.type = type;
-
-	document.querySelectorAll(".filter-btn").forEach((btn) => {
-		btn.classList.remove("bg-blue-600", "text-white");
-		btn.classList.add("bg-gray-200", "text-gray-700");
-	});
-
-	event.currentTarget.classList.remove("bg-gray-200", "text-gray-700");
-	event.currentTarget.classList.add("bg-blue-600", "text-white");
-
+	document
+		.querySelectorAll(".filter-btn")
+		.forEach(
+			(btn) =>
+				btn.classList.replace("bg-[#F24E1E]", "bg-gray-200") ||
+				btn.classList.replace("text-white", "text-gray-700")
+		);
+	element.classList.replace("bg-gray-200", "bg-[#F24E1E]");
+	element.classList.replace("text-gray-700", "text-white");
 	renderEstablishments();
 }
 
-function filterByDistance(maxDistance) {
+function filterByDistance(maxDistance, element) {
 	establishmentFilters.distance = maxDistance;
-
-	document.querySelectorAll(".distance-filter").forEach((btn) => {
-		btn.classList.remove("bg-blue-100", "text-blue-800");
-		btn.classList.add("bg-gray-100", "text-gray-700");
-	});
-
-	event.currentTarget.classList.remove("bg-gray-100", "text-gray-700");
-	event.currentTarget.classList.add("bg-blue-100", "text-blue-800");
-
+	document
+		.querySelectorAll(".distance-filter")
+		.forEach(
+			(btn) =>
+				btn.classList.replace("bg-amber-100", "bg-gray-100") ||
+				btn.classList.replace("text-amber-800", "text-gray-700")
+		);
+	element.classList.replace("bg-gray-100", "bg-amber-100");
+	element.classList.replace("text-gray-700", "text-amber-800");
 	renderEstablishments();
 }
 
 // =======================================================
-// SISTEMA DE ROTAS
+// 						SISTEMA DE ROTAS
 // =======================================================
+
 function loadCurrentRoute() {
 	const stopsContainer = document.getElementById("route-stops");
 	const totalDistanceSpan = document.getElementById("total-distance");
@@ -1149,8 +1125,153 @@ function addToCurrentRoute() {
 }
 
 // =======================================================
-// VISUALIZAÇÃO 360° E AR
+// 		GOOGLE MAPS & GEOLOCATION (RF04, RF09)
 // =======================================================
+
+function initMap() {
+	const defaultCenter = { lat: -22.4339, lng: -46.9567 };
+
+	try {
+		map = new google.maps.Map(document.getElementById("google-map"), {
+			zoom: 15,
+			center: defaultCenter,
+			styles: [
+				{ featureType: "poi", stylers: [{ visibility: "simplified" }] },
+				{ featureType: "transit", stylers: [{ visibility: "off" }] },
+			],
+			disableDefaultUI: true,
+			gestureHandling: "greedy",
+		});
+
+		placesService = new google.maps.places.PlacesService(map);
+		addTouristPointMarkers();
+		getCurrentLocation();
+
+		showNotification("Mapa carregado com sucesso!", "success");
+	} catch (error) {
+		console.error("Erro ao inicializar Google Maps:", error);
+		document.getElementById("map-fallback").classList.remove("hidden");
+		document.getElementById("google-map").classList.add("hidden");
+		showNotification(
+			"Erro ao carregar mapa. Usando modo offline.",
+			"error"
+		);
+	}
+}
+
+function getCurrentLocation() {
+	if (!navigator.geolocation) {
+		showNotification(
+			"Geolocalização não suportada neste navegador",
+			"error"
+		);
+		return;
+	}
+
+	navigator.geolocation.getCurrentPosition(
+		(position) => {
+			userLocation = {
+				lat: position.coords.latitude,
+				lng: position.coords.longitude,
+			};
+
+			if (map) {
+				map.setCenter(userLocation);
+				new google.maps.Marker({
+					position: userLocation,
+					map: map,
+					title: "Sua localização",
+					icon: {
+						path: google.maps.SymbolPath.CIRCLE,
+						scale: 8,
+						fillColor: "#F24E1E",
+						fillOpacity: 1,
+						strokeColor: "white",
+						strokeWeight: 3,
+					},
+				});
+			}
+
+			updateDistancesFromUserLocation();
+			showNotification("📍 Localização obtida com sucesso!", "success");
+		},
+		(error) => {
+			let message = "Erro ao obter localização: ";
+			switch (error.code) {
+				case error.PERMISSION_DENIED:
+					message += "Permissão negada";
+					break;
+				case error.POSITION_UNAVAILABLE:
+					message += "Localização indisponível";
+					break;
+				case error.TIMEOUT:
+					message += "Tempo esgotado";
+					break;
+				default:
+					message += "Erro desconhecido";
+					break;
+			}
+			showNotification(message, "error");
+		}
+	);
+}
+
+function addTouristPointMarkers() {
+	if (!map) return;
+
+	MOCK_DATA.touristPoints.forEach((point) => {
+		const marker = new google.maps.Marker({
+			position: { lat: point.latitude, lng: point.longitude },
+			map: map,
+			title: point.name,
+			icon: {
+				url: "https://maps.google.com/mapfiles/ms/icons/orange-dot.png",
+			},
+		});
+
+		const infoWindow = new google.maps.InfoWindow({
+			content: `
+				<div class="p-2">
+					<h3 class="font-bold">${point.name}</h3>
+					<p class="text-sm text-gray-600">${point.category}</p>
+					<button onclick="showTouristPointDetail(${point.id})" class="mt-2 bg-blue-600 text-white px-3 py-1 rounded text-sm">
+						Ver Detalhes
+					</button>
+				</div>
+			`,
+		});
+
+		marker.addListener("click", () => {
+			infoWindow.open(map, marker);
+		});
+
+		markers.push(marker);
+	});
+}
+
+function updateDistancesFromUserLocation() {
+	if (!userLocation) return;
+
+	MOCK_DATA.establishments.forEach((est) => {
+		est.distance = Math.floor(Math.random() * 1500) + 100;
+	});
+
+	MOCK_DATA.touristPoints.forEach((point) => {
+		point.distance = Math.floor(Math.random() * 1000) + 100;
+	});
+
+	const currentScreen = screenHistory[screenHistory.length - 1];
+	if (currentScreen === "screen-establishments-list") {
+		renderEstablishments();
+	} else if (currentScreen === "screen-main") {
+		loadNearbyLocations();
+	}
+}
+
+// =======================================================
+// VISUALIZAÇÃO 360º E AR(RF01)
+// =======================================================
+
 function zoom360(direction) {
 	const img = document.getElementById("image-360");
 	if (!img) return;
@@ -1272,7 +1393,7 @@ function getARIcon(type) {
 
 function getARIconColor(type) {
 	const colors = {
-		tourist: "text-blue-600",
+		tourist: "text-orange-600",
 		restaurant: "text-green-600",
 		shop: "text-purple-600",
 		cafe: "text-yellow-600",
@@ -1291,6 +1412,10 @@ function showARDetails(markerId) {
 		showEstablishmentDetail(marker.id);
 	}
 }
+
+// =======================================================
+// LÓGICA DA TELA AR (RF08)
+// =======================================================
 
 function toggleARFilters() {
 	const panel = document.getElementById("ar-filters-panel");
@@ -1338,6 +1463,7 @@ function captureARScene() {
 // =======================================================
 // PERFIL DO USUÁRIO E ESTATÍSTICAS
 // =======================================================
+
 function loadUserStats() {
 	const statsContainer = document.getElementById("user-stats");
 	if (!statsContainer) return;
@@ -1413,6 +1539,7 @@ function toggleLocation(checkbox) {
 // =======================================================
 // FORMULÁRIOS E UPLOADS
 // =======================================================
+
 function handleEstablishmentSubmit(e) {
 	e.preventDefault();
 
@@ -1481,151 +1608,9 @@ function handleMainSearch(e) {
 }
 
 // =======================================================
-// GOOGLE MAPS
-// =======================================================
-function initMap() {
-	const defaultCenter = { lat: -22.4339, lng: -46.9567 };
-
-	try {
-		map = new google.maps.Map(document.getElementById("google-map"), {
-			zoom: 15,
-			center: defaultCenter,
-			styles: [
-				{ featureType: "poi", stylers: [{ visibility: "simplified" }] },
-				{ featureType: "transit", stylers: [{ visibility: "off" }] },
-			],
-			disableDefaultUI: true,
-			gestureHandling: "greedy",
-		});
-
-		placesService = new google.maps.places.PlacesService(map);
-		addTouristPointMarkers();
-		getCurrentLocation();
-
-		showNotification("Mapa carregado com sucesso!", "success");
-	} catch (error) {
-		console.error("Erro ao inicializar Google Maps:", error);
-		document.getElementById("map-fallback").classList.remove("hidden");
-		document.getElementById("google-map").classList.add("hidden");
-		showNotification(
-			"Erro ao carregar mapa. Usando modo offline.",
-			"error"
-		);
-	}
-}
-
-function getCurrentLocation() {
-	if (!navigator.geolocation) {
-		showNotification(
-			"Geolocalização não suportada neste navegador",
-			"error"
-		);
-		return;
-	}
-
-	navigator.geolocation.getCurrentPosition(
-		(position) => {
-			userLocation = {
-				lat: position.coords.latitude,
-				lng: position.coords.longitude,
-			};
-
-			if (map) {
-				map.setCenter(userLocation);
-				new google.maps.Marker({
-					position: userLocation,
-					map: map,
-					title: "Sua localização",
-					icon: {
-						path: google.maps.SymbolPath.CIRCLE,
-						scale: 10,
-						fillColor: "#1D4ED8",
-						fillOpacity: 1,
-						strokeColor: "white",
-						strokeWeight: 3,
-					},
-				});
-			}
-
-			updateDistancesFromUserLocation();
-			showNotification("📍 Localização obtida com sucesso!", "success");
-		},
-		(error) => {
-			let message = "Erro ao obter localização: ";
-			switch (error.code) {
-				case error.PERMISSION_DENIED:
-					message += "Permissão negada";
-					break;
-				case error.POSITION_UNAVAILABLE:
-					message += "Localização indisponível";
-					break;
-				case error.TIMEOUT:
-					message += "Tempo esgotado";
-					break;
-				default:
-					message += "Erro desconhecido";
-					break;
-			}
-			showNotification(message, "error");
-		}
-	);
-}
-
-function addTouristPointMarkers() {
-	if (!map) return;
-
-	MOCK_DATA.touristPoints.forEach((point) => {
-		const marker = new google.maps.Marker({
-			position: { lat: point.latitude, lng: point.longitude },
-			map: map,
-			title: point.name,
-			icon: {
-				url: "https://maps.google.com/mapfiles/ms/icons/blue-dot.png",
-			},
-		});
-
-		const infoWindow = new google.maps.InfoWindow({
-			content: `
-				<div class="p-2">
-					<h3 class="font-bold">${point.name}</h3>
-					<p class="text-sm text-gray-600">${point.category}</p>
-					<button onclick="showTouristPointDetail(${point.id})" class="mt-2 bg-blue-600 text-white px-3 py-1 rounded text-sm">
-						Ver Detalhes
-					</button>
-				</div>
-			`,
-		});
-
-		marker.addListener("click", () => {
-			infoWindow.open(map, marker);
-		});
-
-		markers.push(marker);
-	});
-}
-
-function updateDistancesFromUserLocation() {
-	if (!userLocation) return;
-
-	MOCK_DATA.establishments.forEach((est) => {
-		est.distance = Math.floor(Math.random() * 1500) + 100;
-	});
-
-	MOCK_DATA.touristPoints.forEach((point) => {
-		point.distance = Math.floor(Math.random() * 1000) + 100;
-	});
-
-	const currentScreen = screenHistory[screenHistory.length - 1];
-	if (currentScreen === "screen-establishments-list") {
-		renderEstablishments();
-	} else if (currentScreen === "screen-main") {
-		loadNearbyLocations();
-	}
-}
-
-// =======================================================
 // UTILITÁRIOS
 // =======================================================
+
 function showNotification(message, type = "info") {
 	const notification = document.createElement("div");
 	const bgColor =
@@ -1659,3 +1644,37 @@ function showNotification(message, type = "info") {
 		}
 	}, 3000);
 }
+
+// =======================================================
+// INICIALIZAÇÃO E VARIÁVEIS GLOBAIS
+// =======================================================
+
+document.addEventListener("DOMContentLoaded", () => {
+	const splashScreen = document.getElementById("splash-screen");
+	if (splashScreen) {
+		setTimeout(() => {
+			splashScreen.classList.add("opacity-0");
+			splashScreen.addEventListener(
+				"transitionend",
+				() => {
+					splashScreen.style.display = "none";
+					showScreen("screen-login");
+				},
+				{ once: true }
+			);
+		}, 3000);
+	} else {
+		// Fallback caso a splash não exista
+		showScreen("screen-login");
+	}
+
+	lucide.createIcons();
+
+	initializeApp();
+
+	setupEventListeners();
+
+	loadNearbyLocations();
+
+	loadUserStats();
+});
