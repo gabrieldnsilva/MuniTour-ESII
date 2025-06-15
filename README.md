@@ -1,6 +1,6 @@
 # MuniTour
 
-![MuniTour Banner](https://vault.pulsarimagens.com.br/file/preview/22MS265.jpg)
+![MuniTour Banner](./assets/img/Splash-Munitour.png)
 
 > **Explore Mogi Mirim como nunca antes!**
 
@@ -81,8 +81,6 @@ MuniTour/
 -   Gabriel Danilo
 -   Kaique Carvalho
 -   Rogério Rodrigues
-
-Agradecimentos à FATEC Mogi Mirim e à Prefeitura Municipal pelo apoio e validação do conteúdo.
 
 ---
 
