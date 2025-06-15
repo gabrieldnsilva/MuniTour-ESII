@@ -1,91 +1,95 @@
 # MuniTour
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Status: Development](https://img.shields.io/badge/Status-Development-orange.svg)]()
+![MuniTour Banner](https://vault.pulsarimagens.com.br/file/preview/22MS265.jpg)
 
-## Sobre o Projeto
+> **Explore Mogi Mirim como nunca antes!**
 
-MuniTour é uma plataforma interativa de turismo inteligente para cidades, desenvolvida como parte do curso de Análise e Desenvolvimento de Sistemas na disciplina de Engenharia de Software II.
+MuniTour é uma plataforma interativa de turismo inteligente, criada para transformar a experiência de turistas e moradores ao explorar a cidade. Combinando tecnologia, cultura e acessibilidade, o MuniTour oferece recursos inovadores como Realidade Aumentada, visualização 360°, mapas interativos, linha do tempo histórica e integração oficial com a prefeitura e estabelecimentos locais.
 
-A plataforma oferece uma experiência imersiva e educativa para turistas e moradores locais, combinando tecnologias modernas com informações culturais verificadas pela administração municipal.
+---
 
-## Visão do Produto
+## 🚀 Visão Geral
 
-Para **turistas e moradores locais** que **desejam explorar e conhecer melhor os pontos turísticos, história e cultura da cidade**, o **MuniTour** é uma **plataforma interativa de turismo inteligente** que apresenta **visualizações em 360° de locais turísticos, informações históricas com linha do tempo evolutiva, mapa interativo dos bairros e recomendações gastronômicas culturais**. Diferente de **guias turísticos tradicionais e aplicativos convencionais de turismo**, o **MuniTour** oferece **uma experiência imersiva pré-visita, conteúdo histórico-cultural verificado, acesso através de totens espalhados pela cidade e integração oficial com estabelecimentos locais validados pela prefeitura municipal**.
+-   **Imersão total:** Visualize pontos turísticos em 360° e AR, descubra a história da cidade com linhas do tempo e explore rotas personalizadas.
+-   **Acesso multiplataforma:** Use no celular, desktop ou em totens interativos espalhados pela cidade.
+-   **Conteúdo validado:** Todas as informações são verificadas pela administração municipal.
+-   **Foco em acessibilidade:** Interface responsiva, tooltips, legendas e navegação intuitiva.
 
-## Funcionalidades Principais
+---
 
--   🏛️ **Visualização 360°** de locais turísticos
--   📚 **Informações histórico-culturais** dos pontos de interesse
--   ⏰ **Linha do tempo** com evolução histórica dos locais
--   🗺️ **Mapa interativo** dos bairros
--   🍽️ **Informações sobre estabelecimentos**
--   🏛️ **Integração oficial** com a prefeitura municipal
--   📱 **Realidade Aumentada** para exploração imersiva
--   📍 **Geolocalização** e busca baseada em localização
--   🛣️ **Planejamento de rotas** personalizadas
--   👤 **Perfil de usuário** com histórico e favoritos
+## ✨ Funcionalidades em Destaque
 
-## Status do Desenvolvimento
+|     | Funcionalidade               | Descrição breve                                |
+| --- | ---------------------------- | ---------------------------------------------- |
+| 🏛️  | Visualização 360°            | Explore locais turísticos em fotos imersivas   |
+| 📚  | Linha do tempo histórica     | Descubra a evolução dos pontos de interesse    |
+| 🗺️  | Mapa interativo              | Veja bairros, rotas e estabelecimentos no mapa |
+| 🍽️  | Consulta de estabelecimentos | Gastronomia, lojas, cafés e hospedagem         |
+| 📱  | Realidade Aumentada (AR)     | Veja marcadores interativos sobre imagem real  |
+| 🛣️  | Planejamento de rotas        | Monte seu roteiro personalizado                |
+| 👤  | Perfil do usuário            | Histórico, favoritos e conquistas              |
+| 🏛️  | Integração municipal         | Conteúdo validado e oficial                    |
+| 🖥️  | Totens interativos           | Acesso fácil em pontos estratégicos da cidade  |
 
-✅ **Protótipo Funcional Completo** - Todas as 9 funcionalidades principais (RF01-RF09) foram implementadas e testadas.
+---
 
-### Funcionalidades Implementadas:
+## 🎬 Experimente Agora
 
--   ✅ RF01: Visualização 360°
--   ✅ RF02: Consulta de Estabelecimentos
--   ✅ RF03: Conteúdo Histórico
--   ✅ RF04: Mapa Interativo (com Google Maps)
--   ✅ RF05: Rotas Personalizadas
--   ✅ RF06: Cadastro de Estabelecimentos
--   ✅ RF07: Validação Municipal
--   ✅ RF08: Realidade Aumentada
--   ✅ RF09: Geolocalização
+1. **Clone o repositório:**
+    ```bash
+    git clone https://github.com/seu-usuario/MuniTour.git
+    cd MuniTour
+    ```
+2. **Abra o protótipo:**
 
-## Como Executar o Protótipo
+    - Navegue até `src/` e abra `index.html` em seu navegador favorito.
+    - Para testar a experiência completa, utilize um navegador moderno (Chrome, Edge, Firefox).
 
-1. **Obter chave da API do Google Maps**:
+3. **Google Maps:**
 
-    - Acesse [Google Cloud Console](https://console.cloud.google.com/)
-    - Ative a "Maps JavaScript API"
-    - Crie uma chave de API
+    - Para recursos de mapa, obtenha uma chave da API do Google Maps e substitua no arquivo `index.html` se necessário.
 
-2. **Configurar o projeto**:
-    - Substitua `YOUR_API_KEY` no arquivo `src/MuniTourProt.html` pela sua chave real
-3. **Executar**:
-    - Abra `src/MuniTourProt.html` em um navegador web moderno
-    - A aplicação funcionará offline (exceto mapas que requerem internet)
+4. **Modo Totem:**
+    - Experimente a interface para totens em `src/Totem/totem.html` (ideal para uso público em pontos turísticos).
 
-## Estrutura do Projeto
+---
+
+## 📸 Exemplos Visuais
+
+> **Sugestão:** Adicione aqui um GIF ou screenshots do app em uso, mostrando a tela AR, 360° e o mapa interativo.
+
+---
+
+## 📂 Estrutura do Projeto
 
 ```
 MuniTour/
 ├── src/
-│   └── MuniTourProt.html    # Protótipo completo da aplicação
-├── docs/                    # Documentação do projeto
-├── README.md               # Este arquivo
-└── LICENSE                 # Licença do projeto
+│   ├── index.html           # Protótipo principal
+│   ├── script.js            # Lógica da aplicação
+│   ├── styles.css           # Estilos customizados
+│   └── Totem/totem.html     # Interface para totens
+├── docs/                    # Documentação
+├── README.md                # Este arquivo
+└── LICENSE                  # Licença MIT
 ```
 
-## Documentação
+---
 
-Para mais detalhes, consulte:
+## 👥 Equipe
 
--   [Visão do Produto](./docs/VISION.md)
--   [Funcionalidades](./docs/FEATURES.md)
--   [Diagramas de Caso de Uso](./docs/diagrams/useCase.md)
+-   Gabriel Danilo
+-   Kaique Carvalho
+-   Rogério Rodrigues
 
-## Equipe
+Agradecimentos à FATEC Mogi Mirim e à Prefeitura Municipal pelo apoio e validação do conteúdo.
 
--   **Gabriel Danilo**
--   **Kaique Carvalho**
--   **Rogério Rodrigues**
+---
 
-## Licença
+## 📄 Licença
 
 Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
 
 ---
 
-**Projeto Acadêmico** - Análise e Desenvolvimento de Sistemas  
-_Engenharia de Software II_
+> _Projeto acadêmico desenvolvido para a disciplina de Engenharia de Software II – FATEC Mogi Mirim_
