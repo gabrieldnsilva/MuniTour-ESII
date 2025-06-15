@@ -770,7 +770,7 @@ function loadTimeline(timeline) {
 		const div = document.createElement("div");
 		div.className = "timeline-item mb-4";
 		div.innerHTML = `
-			<p class="font-bold text-[#F24E1E]">${item.year} - ${item.event}</p>
+			<p class="font-bold text-[#F24E1E] mb-1">${item.year} - ${item.title}</p>
                 <p class="text-gray-500">${item.description}</p>
 		`;
 		container.appendChild(div);
