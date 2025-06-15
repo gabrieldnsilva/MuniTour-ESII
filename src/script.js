@@ -501,7 +501,7 @@ let placesService;
 let markers = [];
 let currentTouristPoint = null;
 let currentEstablishment = null;
-let currentRoute = null;
+let currentRoute = [];
 let establishmentFilters = {
 	type: "all", // 'all', 'restaurant', 'cafe', 'shop', 'hotel'
 	distance: "all", // 'all', 500, 1000, 2000 (em metros)
@@ -1009,7 +1009,12 @@ function filterByDistance(maxDistance, element) {
 // 						SISTEMA DE ROTAS
 // =======================================================
 
+function ensureCurrentRoute() {
+	if (!Array.isArray(currentRoute)) currentRoute = [];
+}
+
 function loadCurrentRoute() {
+	ensureCurrentRoute();
 	const stopsContainer = document.getElementById("route-stops");
 	const totalDistanceSpan = document.getElementById("total-distance");
 	const totalTimeSpan = document.getElementById("total-time");
@@ -1062,9 +1067,12 @@ function loadCurrentRoute() {
 }
 
 function removeRouteStop(index) {
-	currentRoute.splice(index, 1);
-	loadCurrentRoute();
-	showNotification(`Parada removida da rota`, "success");
+	ensureCurrentRoute();
+	if (index >= 0 && index < currentRoute.length) {
+		currentRoute.splice(index, 1);
+		loadCurrentRoute();
+		showNotification(`Parada removida da rota`, "success");
+	}
 }
 
 function getStopTypeLabel(type) {
@@ -1132,6 +1140,7 @@ function loadAvailableStops() {
 }
 
 function addStopToRoute(stop) {
+	ensureCurrentRoute();
 	const exists = currentRoute.some(
 		(routeStop) => routeStop.name === stop.name
 	);
