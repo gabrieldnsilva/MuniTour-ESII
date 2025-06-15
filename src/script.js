@@ -437,6 +437,18 @@ const MOCK_DATA = {
 // INICIALIZAÇÃO DA APLICAÇÃO
 // =======================================================
 
+document.addEventListener("DOMContentLoaded", () => {
+	lucide.createIcons();
+
+	initializeApp();
+
+	setupEventListeners();
+
+	loadNearbyLocations();
+
+	loadUserStats();
+});
+
 function initializeApp() {
 	localStorage.setItem(
 		"munitour_user_stats",

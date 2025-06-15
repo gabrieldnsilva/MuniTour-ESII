@@ -849,7 +849,7 @@
 						<div class="grid grid-cols-2 gap-3">
 							<button
 								onclick="filterAddStops('tourist')"
-								class="flex items-center p-3 bg-amber-50 rounded-lg hover:bg-amber-100 transition-colors"
+								class="category-filter-btn flex items-center p-3 bg-amber-50 rounded-lg hover:bg-amber-100 transition-colors"
 							>
 								<i
 									data-lucide="landmark"
@@ -861,7 +861,7 @@
 							</button>
 							<button
 								onclick="filterAddStops('restaurant')"
-								class="flex items-center p-3 bg-green-50 rounded-lg hover:bg-green-100 transition-colors"
+								class="category-filter-btn flex items-center p-3 bg-green-50 rounded-lg hover:bg-green-100 transition-colors"
 							>
 								<i
 									data-lucide="utensils-crossed"
@@ -873,7 +873,7 @@
 							</button>
 							<button
 								onclick="filterAddStops('shop')"
-								class="flex items-center p-3 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors"
+								class=" category-filter-btn flex items-center p-3 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors"
 							>
 								<i
 									data-lucide="shopping-bag"
@@ -885,7 +885,7 @@
 							</button>
 							<button
 								onclick="filterAddStops('cafe')"
-								class="flex items-center p-3 bg-yellow-50 rounded-lg hover:bg-yellow-100 transition-colors"
+								class="category-filter-btn flex items-center p-3 bg-yellow-50 rounded-lg hover:bg-yellow-100 transition-colors"
 							>
 								<i
 									data-lucide="coffee"
@@ -904,56 +904,7 @@
 							Locais Próximos
 						</h3>
 						<div class="space-y-3" id="available-stops">
-							<!-- Item de exemplo -->
-							<div
-								class="flex items-center bg-white p-3 rounded-lg shadow-sm border border-gray-200 cursor-pointer hover:bg-gray-50"
-								onclick="addToRoute('Praça Central')"
-							>
-								<img
-									src="https://lh5.googleusercontent.com/p/AF1QipM5Qc8u_Xy1x9xY-2I1T3J0G6P2H8t6I5O7V7Cg=w540-h312-n-k-no"
-									alt="Praça Central"
-									class="w-12 h-12 rounded-md object-cover mr-3"
-									onerror="this.onerror=null;this.src='https://placehold.co/60x60/e5e7eb/6b7280?text=Praça';"
-								/>
-								<div class="flex-1">
-									<h4 class="font-semibold text-gray-800">
-										Praça Central
-									</h4>
-									<p class="text-sm text-gray-500">
-										Ponto Turístico • 400m
-									</p>
-								</div>
-								<button
-									class="p-2 bg-amber-100 text-amber-600 rounded-full hover:bg-amber-200"
-								>
-									<i data-lucide="plus" class="w-4 h-4"></i>
-								</button>
-							</div>
-
-							<div
-								class="flex items-center bg-white p-3 rounded-lg shadow-sm border border-gray-200 cursor-pointer hover:bg-gray-50"
-								onclick="addToRoute('Mercado Municipal')"
-							>
-								<img
-									src="https://images.unsplash.com/photo-1610943632243-772e5b32b4a4?w=120&h=120&fit=crop"
-									alt="Mercado Municipal"
-									class="w-12 h-12 rounded-md object-cover mr-3"
-									onerror="this.onerror=null;this.src='https://placehold.co/60x60/fef3c7/f59e0b?text=Mercado';"
-								/>
-								<div class="flex-1">
-									<h4 class="font-semibold text-gray-800">
-										Mercado Municipal
-									</h4>
-									<p class="text-sm text-gray-500">
-										Comércio • 650m
-									</p>
-								</div>
-								<button
-									class="p-2 bg-amber-100 text-amber-600 rounded-full hover:bg-amber-200"
-								>
-									<i data-lucide="plus" class="w-4 h-4"></i>
-								</button>
-							</div>
+							<!-- Locais disponíveis carregados dinamicamente -->
 						</div>
 					</div>
 				</div>
@@ -1563,11 +1514,11 @@
 		</div>
 
 		<!-- Google Maps API - Adicionado aqui -->
-		<script
-			src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDhXn9mcpcHkGJG_UVuSZGDRobDmscdzAk&callback=initMap&libraries=places"
+		<script>
+			src="https://maps.googleapis.com/maps/api/js?key={GOOGLE_MAPS_API_KEY}&callback=initMap&libraries=places"
 			async
 			defer
-		></script>
+		</script>
 
 		<!-- Custom JavaScript -->
 		<script src="./script.js" defer></script>
