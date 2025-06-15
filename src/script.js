@@ -10,7 +10,7 @@ const MOCK_DATA = {
 			category: "Centro Histórico",
 			description:
 				"Construída no século XIX, a Igreja Matriz de São José é um marco da arquitetura neoclássica na região. Sua história se entrelaça com a fundação da cidade, servindo como centro comunitário e espiritual por gerações.",
-			image: "https://placehold.co/600x400/d1d5db/374151?text=Igreja+Matriz",
+			image: "https://www.mogimirim.sp.gov.br/uploads/turismo/12769/maior_LlHhXk5aWxEzwIg_DjGedY4sCkUcFBXt.JPG",
 			latitude: -22.4339,
 			longitude: -46.9567,
 			timeline: [
@@ -964,7 +964,6 @@ function showEstablishmentDetail(establishmentId) {
 	}
 
 	lucide.createIcons();
-	showScreen("screen-establishment-detail");
 }
 
 function getDetailsTitle(type) {
@@ -1442,37 +1441,45 @@ function initializeAR() {
 
 	MOCK_DATA.arMarkers.forEach((marker) => {
 		const markerDiv = document.createElement("div");
-		markerDiv.className = "ar-marker absolute";
+		markerDiv.className = "ar-marker absolute group";
 		markerDiv.style.left = `${marker.x}%`;
 		markerDiv.style.top = `${marker.y}%`;
+		markerDiv.style.transform = "translate(-50%, -100%)";
+		markerDiv.tabIndex = 0;
+		markerDiv.setAttribute("role", "button");
+		markerDiv.setAttribute("aria-label", marker.name);
+
+		// Miniatura: busca imagem real do ponto turístico ou placeholder
+		let thumb = "";
+		const tourist = MOCK_DATA.touristPoints.find((p) =>
+			p.name.includes(marker.name)
+		);
+		const estab = MOCK_DATA.establishments.find((e) =>
+			e.name.includes(marker.name)
+		);
+		if (tourist && tourist.image) thumb = tourist.image;
+		else if (estab && estab.image) thumb = estab.image;
+		else thumb = "https://placehold.co/80x80/EEE/888?text=AR";
 
 		markerDiv.innerHTML = `
-			<div class="bg-white/95 backdrop-blur-sm rounded-lg p-3 shadow-lg border border-white/20 max-w-xs transform -translate-x-1/2 -translate-y-full">
-				<div class="flex items-center gap-2 mb-2">
-					<i data-lucide="${getARIcon(marker.type)}" class="w-5 h-5 ${getARIconColor(
+			<div class="ar-marker-card w-20 h-20 rounded-full bg-white/90 shadow-xl border-4 border-white flex flex-col items-center justify-center relative cursor-pointer transition-transform hover:scale-110 focus:scale-110 outline-none">
+				<img src="${thumb}" alt="${
+			marker.name
+		}" class="w-14 h-14 rounded-full object-cover border-2 border-gray-200 mb-1" />
+				<i data-lucide="${getARIcon(marker.type)}" class="w-5 h-5 ${getARIconColor(
 			marker.type
-		)}"></i>
-					<h3 class="font-bold text-gray-800 text-sm">${marker.name}</h3>
-				</div>
-				<p class="text-xs text-gray-600 mb-2">${marker.description}</p>
-				<div class="flex gap-2">
-					<button onclick="showARDetails('${
-						marker.id
-					}')" class="text-xs bg-blue-600 text-white px-3 py-1 rounded-full hover:bg-blue-700">
-						Detalhes
-					</button>
-					${
-						marker.type === "tourist"
-							? `
-						<button onclick="showScreen('screen-360-view')" class="text-xs bg-purple-600 text-white px-3 py-1 rounded-full hover:bg-purple-700">
-							360°
-						</button>
-					`
-							: ""
-					}
-				</div>
+		)} absolute top-1 right-1 bg-white rounded-full p-1 shadow"></i>
+			</div>
+			<div class="ar-marker-tooltip opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity absolute left-1/2 -translate-x-1/2 mt-2 z-10 bg-black/80 text-white text-xs rounded px-2 py-1 pointer-events-auto whitespace-nowrap">
+				<strong>${marker.name}</strong><br/>
+				<span>${marker.description}</span>
 			</div>
 		`;
+
+		markerDiv.addEventListener("click", () => showARDetails(marker.id));
+		markerDiv.addEventListener("keydown", (e) => {
+			if (e.key === "Enter" || e.key === " ") showARDetails(marker.id);
+		});
 
 		overlayContainer.appendChild(markerDiv);
 	});
@@ -1524,16 +1531,24 @@ function toggleARFilters() {
 	}
 }
 
-function setARFilter(type) {
+function setARFilter(type, event) {
 	document.querySelectorAll(".ar-filter-btn").forEach((btn) => {
-		btn.classList.remove("ring-2", "ring-blue-500", "ring-offset-2");
+		btn.classList.remove(
+			"ring-2",
+			"ring-blue-500",
+			"ring-offset-2",
+			"scale-105"
+		);
 	});
 
-	event.currentTarget.classList.add(
-		"ring-2",
-		"ring-blue-500",
-		"ring-offset-2"
-	);
+	if (event && event.currentTarget) {
+		event.currentTarget.classList.add(
+			"ring-2",
+			"ring-blue-500",
+			"ring-offset-2",
+			"scale-105"
+		);
+	}
 
 	const markers = document.querySelectorAll(".ar-marker");
 	MOCK_DATA.arMarkers.forEach((marker, index) => {
