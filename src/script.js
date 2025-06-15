@@ -512,14 +512,8 @@ function showScreen(screenId, isGoingBack = false) {
 
 	document.getElementById("app-container").scrollTop = 0;
 
-	// Lógica específica ao abrir telas
-	if (screenId === "screen-establishments-list") {
-		renderEstablishments();
-	}
-	if (screenId === "screen-tourist-point-list") {
-		renderTouristPoints();
-	}
-	// O mapa é inicializado pelo callback da API, não aqui diretamente.
+	handleScreenSpecificLogic(screenId);
+	updateNavigationState(screenId);
 
 	lucide.createIcons();
 }
@@ -530,6 +524,70 @@ function goBack() {
 		const previousScreenId = screenHistory[screenHistory.length - 1];
 		showScreen(previousScreenId, true);
 	}
+}
+
+function handleScreenSpecificLogic(screenId) {
+	switch (screenId) {
+		case "screen-tourist-point-list":
+			loadTouristPointsList();
+
+			break;
+
+		case "screen-establishments-list":
+			renderEstablishments();
+
+			break;
+
+		case "screen-route-planner":
+			loadCurrentRoute();
+
+			break;
+
+		case "screen-add-stop":
+			loadAvailableStops();
+
+			break;
+
+		case "screen-ar-view":
+			initializeAR();
+
+			break;
+
+		case "screen-user-profile":
+			loadUserStats();
+
+			break;
+	}
+}
+
+function updateNavigationState(screenId) {
+	document.querySelectorAll("#bottom-nav button").forEach((button) => {
+		button.classList.remove("active");
+		if (button.dataset.screen === screenId) {
+			button.classList.add("active");
+		}
+	});
+
+	const navMap = {
+		"screen-main": "nav-home",
+		"screen-route-planner": "nav-route-planner",
+		"screen-ar-view": "nav-ar",
+		"screen-register-establishment": "nav-register",
+		"screen-user-profile": "nav-profile",
+	};
+
+	const activeNav = navMap[screenId];
+	if (activeNav) {
+		document.getElementById(activeNav).classList.add("active");
+	} else {
+		document.querySelectorAll("#bottom-nav button").forEach((btn) => {
+			btn.classList.remove("active");
+		});
+	}
+}
+
+function setupNavigationState() {
+	updateNavigationState(screenHistory[screenHistory.length - 1]);
 }
 
 function handleLogin() {
@@ -548,15 +606,29 @@ function showNotification(message, type = "info") {
 			? "bg-green-600"
 			: type === "error"
 			? "bg-red-600"
+			: type === "warning"
+			? "bg-yellow-600"
 			: "bg-[#F24E1E]"; // Cor primária para notificações 'info'
 
 	notification.className = `fixed top-4 left-1/2 transform -translate-x-1/2 ${bgColor} text-white px-4 py-2 rounded-lg shadow-lg z-50`;
 	notification.textContent = message;
+
 	document.body.appendChild(notification);
 
 	setTimeout(() => {
+		notification.style.opacity = "1";
+		notification.style.transform = "translate(-50%, 0)";
+	}, 10);
+
+	setTimeout(() => {
 		if (document.body.contains(notification)) {
-			document.body.removeChild(notification);
+			notification.style.opacity = "0";
+			notification.style.transform = "translate(-50%, -20px)";
+			setTimeout(() => {
+				if (document.body.contains(notification)) {
+					document.body.removeChild(notification);
+				}
+			}, 300);
 		}
 	}, 3000);
 }
@@ -1605,44 +1677,6 @@ function handleMainSearch(e) {
 			);
 		}, 1000);
 	}
-}
-
-// =======================================================
-// UTILITÁRIOS
-// =======================================================
-
-function showNotification(message, type = "info") {
-	const notification = document.createElement("div");
-	const bgColor =
-		type === "success"
-			? "bg-green-600"
-			: type === "error"
-			? "bg-red-600"
-			: type === "warning"
-			? "bg-yellow-600"
-			: "bg-blue-600";
-
-	notification.className = `notification fixed top-4 left-1/2 transform -translate-x-1/2 ${bgColor} text-white px-6 py-3 rounded-lg shadow-lg z-50 max-w-sm text-center text-sm font-medium`;
-	notification.textContent = message;
-
-	document.body.appendChild(notification);
-
-	setTimeout(() => {
-		notification.style.opacity = "1";
-		notification.style.transform = "translate(-50%, 0)";
-	}, 10);
-
-	setTimeout(() => {
-		if (document.body.contains(notification)) {
-			notification.style.opacity = "0";
-			notification.style.transform = "translate(-50%, -20px)";
-			setTimeout(() => {
-				if (document.body.contains(notification)) {
-					document.body.removeChild(notification);
-				}
-			}, 300);
-		}
-	}, 3000);
 }
 
 // =======================================================
