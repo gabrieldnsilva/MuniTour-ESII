@@ -1,0 +1,20 @@
+body {
+    font-family: "Inter", sans-serif;
+    /* overflow: hidden;  Evita scroll da página inteira */
+}
+
+/* Custom scrollbar para a lista de locais */
+#places-list::-webkit-scrollbar {
+    width: 8px;
+}
+#places-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+#places-list::-webkit-scrollbar-thumb {
+    background: #b0b0b0;
+    border-radius: 10px;
+}
+#places-list::-webkit-scrollbar-thumb:hover {
+    background: #888;
+}

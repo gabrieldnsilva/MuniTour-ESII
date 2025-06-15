@@ -56,7 +56,7 @@ const MOCK_DATA = {
 			category: "Cultura e História",
 			description:
 				"Casa histórica do século XIX transformada em museu, preserva acervo de documentos, fotografias e objetos que contam a história da cidade e região.",
-			image: "https://placehold.co/600x400/dbeafe/1e40af?text=Museu+Histórico",
+			image: "https://www.olaviajantes.tur.br/wp-content/uploads/2023/12/IMG_20231205_133739-scaled.jpg",
 			latitude: -22.4355,
 			longitude: -46.955,
 			timeline: [
@@ -98,7 +98,7 @@ const MOCK_DATA = {
 			category: "Espaços Públicos",
 			description:
 				"Coração da cidade, a praça central é palco de eventos culturais e ponto de encontro tradicional dos moradores desde 1920.",
-			image: "https://placehold.co/600x400/e5e7eb/6b7280?text=Praça+Central",
+			image: "https://vault.pulsarimagens.com.br/file/preview/22MS265.jpg",
 			latitude: -22.4345,
 			longitude: -46.9575,
 			timeline: [
@@ -135,7 +135,7 @@ const MOCK_DATA = {
 			category: "Comércio Histórico",
 			description:
 				"Tradicional mercado de 1960, oferece produtos locais, artesanato e gastronomia típica da região.",
-			image: "https://placehold.co/600x400/fef3c7/f59e0b?text=Mercado+Municipal",
+			image: "https://spnews.net.br/wp-content/uploads/2023/08/117_29_-Mercadao-165-anos-3.jpg",
 			latitude: -22.435,
 			longitude: -46.958,
 			timeline: [
@@ -186,7 +186,7 @@ const MOCK_DATA = {
 				closing: "22:00",
 				days: "Ter-Dom",
 			},
-			image: "https://placehold.co/600x400/e0e7ff/4338ca?text=Restaurante",
+			image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=2070&auto=format&fit=crop",
 			menu: [
 				"Feijoada Completa - R$ 32,00",
 				"Virado à Paulista - R$ 28,00",
@@ -220,7 +220,7 @@ const MOCK_DATA = {
 				closing: "19:00",
 				days: "Seg-Sáb",
 			},
-			image: "https://placehold.co/600x400/f3e8ff/7c3aed?text=Café+do+Ponto",
+			image: "https://images.unsplash.com/photo-1559925393-8be0ec4767c8?q=80&w=2070&auto=format&fit=crop",
 			menu: [
 				"Café Expresso - R$ 4,50",
 				"Cappuccino - R$ 7,00",
@@ -254,7 +254,7 @@ const MOCK_DATA = {
 				closing: "18:00",
 				days: "Seg-Sáb",
 			},
-			image: "https://placehold.co/600x400/ecfdf5/10b981?text=Artesanato",
+			image: "https://www.guiaviagensbrasil.com/imagens/fachada-loja-embu-das-artes-sp.jpg",
 			menu: [
 				"Cerâmica Decorativa - R$ 25,00",
 				"Tecidos Regionais - R$ 35,00",
@@ -284,7 +284,7 @@ const MOCK_DATA = {
 				closing: "24h",
 				days: "Todos",
 			},
-			image: "https://placehold.co/600x400/fef7cd/eab308?text=Pousada",
+			image: "https://images.trvl-media.com/lodging/32000000/31830000/31829800/31829766/0239cae6.jpg?impolicy=fcrop&w=357&h=201&p=1&q=medium",
 			menu: [
 				"Quarto Standard - R$ 120,00/noite",
 				"Quarto Superior - R$ 150,00/noite",
