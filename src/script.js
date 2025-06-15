@@ -450,15 +450,22 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function initializeApp() {
-	localStorage.setItem(
-		"munitour_user_stats",
-		JSON.stringify(MOCK_DATA.userStats)
-	);
-	setupNavigationState();
+	const splashScreen = document.getElementById("splash-screen");
 	setTimeout(() => {
-		loadNearbyLocations();
-		loadUserStats();
-	}, 500);
+		if (splashScreen) {
+			splashScreen.classList.add("opacity-0");
+			splashScreen.addEventListener(
+				"transitionend",
+				() => {
+					splashScreen.style.display = "none";
+					showScreen("screen-login");
+				},
+				{ once: true }
+			);
+		} else {
+			showScreen("screen-login");
+		}
+	}, 1500);
 }
 
 function setupEventListeners() {
