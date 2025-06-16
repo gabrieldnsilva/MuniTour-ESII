@@ -1085,11 +1085,15 @@
 				id="screen-ar-view"
 				class="hidden absolute inset-0 bg-black z-50"
 			>
-				<div id="ar-camera-feed" class="w-full h-full relative">
-					<!-- Fundo panorâmico real de Mogi Mirim -->
-					<img id="ar-panorama" src="https://vault.pulsarimagens.com.br/file/preview/22MS265.jpg" alt="Praça Central de Mogi Mirim" class="w-full h-full object-cover rounded-b-2xl" style="min-height: 320px; max-height: 420px;" />
+				<div id="ar-camera-feed" class="w-full h-full relative rounded-b-2xl overflow-hidden">
+					<!-- Fundo panorâmico real (print do Street View ou foto da praça) -->
+					<img id="ar-panorama" src="https://www.mogimirim.sp.gov.br/uploads/turismo/12769/maior_LlHhXk5aWxEzwIg_DjGedY4sCkUcFBXt.JPG" alt="Praça Central de Mogi Mirim" class="w-full h-full object-cover" style="min-height: 320px; max-height: 420px;" />
 					<!-- Overlay de informações AR -->
 					<div id="ar-overlays" class="absolute inset-0 pointer-events-none"></div>
+					<!-- Botão para abrir Street View real -->
+					<button onclick="window.open('https://www.google.com/maps/@-22.4328024,-46.9582548,3a,75y,224.92h,3.79t/data=!3m8!1e1!3m6!1sKipb6VyagWUlzVVWEhUAvA!2e0!5s20211001T000000!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fpanoid%3DKipb6VyagWUlzVVWEhUAvA%26cb_client%3Dmaps_sv.tactile.gps%26w%3D400%26h%3D240%26yaw%3D224.92208%26pitch%3D-3.794405%26thumbfov%3D100!7i16384!8i8192?entry=ttu','_blank')" class="absolute bottom-4 right-4 z-20 bg-white/90 text-[#F24E1E] font-semibold px-4 py-2 rounded-full shadow hover:bg-orange-100 transition-colors pointer-events-auto">
+    Ver no Google Street View
+  </button>
 				</div>
 
 				<!-- Controles AR -->
@@ -1159,22 +1163,6 @@
 							<i data-lucide="bed" class="w-4 h-4 mx-auto mb-1"></i>
 							<div>Hotéis</div>
 						</button>
-					</div>
-				</div>
-
-				<!-- Instruções AR -->
-				<div
-					class="absolute bottom-20 left-1/2 transform -translate-x-1/2 text-center text-white"
-				>
-					<div
-						class="bg-black/50 backdrop-blur-sm rounded-lg px-4 py-2"
-					>
-						<p class="text-sm font-medium">
-							Aponte a câmera para pontos de interesse
-						</p>
-						<p class="text-xs opacity-75">
-							Toque nos marcadores para mais informações
-						</p>
 					</div>
 				</div>
 			</div>
@@ -1358,6 +1346,8 @@
 									<input
 										type="checkbox"
 										class="sr-only peer"
+										id="dark-mode-toggle"
+										onchange="toggleDarkMode(this)"
 									/>
 									<div
 										class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-amber-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#F24E1E]"

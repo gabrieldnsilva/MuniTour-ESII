@@ -440,6 +440,8 @@ const MOCK_DATA = {
 document.addEventListener("DOMContentLoaded", () => {
 	lucide.createIcons();
 
+	initializeDarkMode();
+
 	initializeApp();
 
 	setupEventListeners();
@@ -447,6 +449,8 @@ document.addEventListener("DOMContentLoaded", () => {
 	loadNearbyLocations();
 
 	loadUserStats();
+
+	initializeDarkMode();
 });
 
 function initializeApp() {
@@ -1633,12 +1637,34 @@ function toggleNotifications(checkbox) {
 }
 
 function toggleDarkMode(checkbox) {
-	const enabled = checkbox.checked;
-	showNotification(
-		`Modo escuro ${enabled ? "ativado" : "desativado"}`,
-		"info"
-	);
+	const body = document.body;
+	const isDark = checkbox.checked;
+
+	if (isDark) {
+		body.classList.add("dark");
+		localStorage.setItem("munitour_dark_mode", "true");
+		showNotification("Modo escuro ativado", "success");
+	} else {
+		body.classList.remove("dark");
+		localStorage.setItem("munitour_dark_mode", "false");
+		showNotification("Modo claro ativado", "success");
+	}
 }
+
+function initializeDarkMode() {
+	const darkMode = localStorage.getItem("munitour_dark_mode");
+	const toggle = document.getElementById("dark-mode-toggle");
+
+	if (darkMode === "true") {
+		document.body.classList.add("dark");
+		if (toggle) toggle.checked = true;
+	}
+}
+
+// Inicializa o dark mode no carregamento da página
+document.addEventListener("DOMContentLoaded", () => {
+	initializeDarkMode();
+});
 
 function toggleLocation(checkbox) {
 	const enabled = checkbox.checked;
