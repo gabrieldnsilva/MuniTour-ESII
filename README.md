@@ -56,7 +56,7 @@ MuniTour é uma plataforma interativa de turismo inteligente, criada para transf
 
 ## 📸 Exemplos Visuais
 
-> **Sugestão:** Adicione aqui um GIF ou screenshots do app em uso, mostrando a tela AR, 360° e o mapa interativo.
+> ![Exemplo de Visualização 360°](./assets/img/ar-Action.png)
 
 ---
 
